@@ -3,51 +3,25 @@ import React from "react"
 import InputText from "./elements/InputText"
 import Button from "./elements/Button"
 
-import axios from "axios"
-
 class Login extends React.Component{
     constructor(){
         super()
         this.state={
             email:"",
             password:"",
-            user:{}
         }
         this.onChangeHandler=this.onChangeHandler.bind(this)
-        this.submitLogin=this.submitLogin.bind(this)
     }
     onChangeHandler(event){
         const {name, value, type, checked} = event.target
         type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value })
     }
-    submitLogin(){
-        var data={
-            email:this.state.email,
-            password:this.state.password
-        }
-        axios.post(
-            "//localhost:3001/v1/user/login",
-            data  
-        )
-        .then(
-            (result)=>{
-                console.log(result.data.user)
-                this.setState({user:result.data.user})
-                console.log(this.state)
-            }
-        )
-        .catch(
-            (err)=>console.log(err)
-        )
-        
-    }
     render(){
-        console.log(this.state)
         var inputDataEmail={
             class:"",
             name:"email",
             type:"text",
-            value:this.props.name,
+            value:this.state.email, //error?
             inputText:"Email",
             description:"emailHelp",
             help:"Enter email",
@@ -57,7 +31,7 @@ class Login extends React.Component{
             class:"",
             name:"password",
             type:"password",
-            value:this.props.password,
+            value:this.state.password, //error?
             inputText:"Password",
             description:"passwordHelp",
             help:"Enter password",
@@ -70,10 +44,12 @@ class Login extends React.Component{
         }
         var ModalContent
         var ButtonModal
-        if(this.state.user.email){
-            ModalContent=<h3>{this.state.user.name+" logged in"}</h3>
+
+        if(this.props.user.email){
+            ModalContent=<h3>{this.props.user.name+" logged in"}</h3>
             ButtonModal=<button type="button" className="close" data-dismiss="modal" aria-label="Close">Close</button>
         }else{
+
             ModalContent=<form>
                             <InputText
                                 input={inputDataEmail}
@@ -84,9 +60,9 @@ class Login extends React.Component{
                                 onChange={this.onChangeHandler}    
                             />
                         </form>
-            ButtonModal=<Button
+                            ButtonModal=<Button
                             button={buttonDataSubmit}
-                            onClick={this.submitLogin}
+                            onClick={()=>this.props.loginMethod(this.state.email,this.state.password)}
                         />
         }
 
@@ -97,7 +73,6 @@ class Login extends React.Component{
                         <div className="modal-header bg-secondary text-white">
                             <h3>Login</h3>
                         </div>
-                        {}
                         <div className="modal-body">
                             {ModalContent}
                         </div>

@@ -21,7 +21,7 @@ class Login extends React.Component{
             class:"",
             name:"email",
             type:"text",
-            value:this.state.email, //error?
+            value:this.state.email, 
             inputText:"Email",
             description:"emailHelp",
             help:"Enter email",
@@ -31,7 +31,7 @@ class Login extends React.Component{
             class:"",
             name:"password",
             type:"password",
-            value:this.state.password, //error?
+            value:this.state.password,
             inputText:"Password",
             description:"passwordHelp",
             help:"Enter password",
@@ -49,7 +49,6 @@ class Login extends React.Component{
             ModalContent=<h3>{this.props.user.name+" logged in"}</h3>
             ButtonModal=<button type="button" className="close" data-dismiss="modal" aria-label="Close">Close</button>
         }else{
-
             ModalContent=<form>
                             <InputText
                                 input={inputDataEmail}
@@ -60,7 +59,7 @@ class Login extends React.Component{
                                 onChange={this.onChangeHandler}    
                             />
                         </form>
-                            ButtonModal=<Button
+            ButtonModal=<Button
                             button={buttonDataSubmit}
                             onClick={()=>this.props.loginMethod(this.state.email,this.state.password)}
                         />
@@ -76,10 +75,8 @@ class Login extends React.Component{
                         <div className="modal-body">
                             {ModalContent}
                         </div>
-                        <div className="modal-footer">
-                        
+                        <div className="modal-footer">                       
                             {ButtonModal}
-                            
                         </div>
                     </div>
                 </div>

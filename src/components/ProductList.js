@@ -19,7 +19,6 @@ class ProductList extends React.Component{
           .then(
             (resultArray)=>{
               this.setState({products:resultArray.data})
-
               //console.log(this.state.products.products.length)
             }
           )
@@ -30,10 +29,11 @@ class ProductList extends React.Component{
     }
 
     render(){
+
         var productList
         if(this.state.products.products){
             productList=this.state.products.products.map(product=>{
-                return <Product key={product._id} data={product}/>})
+                return <Product key={product._id} data={product} productInfoHandler={this.props.infoHandler} addCartHandler={this.props.cartHandler}/>})
         }else{
             productList=<h1>No products found</h1>
         }
@@ -41,7 +41,11 @@ class ProductList extends React.Component{
         return(
             <div>
                 <h1>ProductList</h1>
-                {productList}
+                <div className="container-fluid">
+                    <div className="row">
+                        {productList}
+                    </div>
+                </div>
             </div>
         )
     }

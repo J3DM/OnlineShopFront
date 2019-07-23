@@ -4,6 +4,7 @@ import './App.css';
 
 import ProductList from "./components/ProductList"
 import Login from "./components/Login"
+import Info from "./components/Info"
 import Navbar from "./components/Navbar"
 import axios from "axios"
 
@@ -11,14 +12,22 @@ class App extends React.Component{
   constructor(){
     super()
     this.state={
-      user:{}
+      user:{},
+      productInfo:{}
     }
     this.submitLogin=this.submitLogin.bind(this)
     this.logout=this.logout.bind(this)   
+    this.cartHandler=this.cartHandler.bind(this)
+    this.infoHandler=this.infoHandler.bind(this)
   }
   
-  componentDidMount() {
-   
+  cartHandler(data){
+    console.log(data)
+  }
+
+  infoHandler(data){
+    //console.log(data)
+    this.setState({productInfo:data})
   }
 
   submitLogin(email,password){
@@ -33,7 +42,7 @@ class App extends React.Component{
     .then(
         (result)=>{
             this.setState({user:result.data.user})
-            console.log("Login->",this.state)
+      //      console.log("Login->",this.state)
         }
     )
     .catch(
@@ -46,7 +55,7 @@ class App extends React.Component{
     if(this.state.user.email){
       this.setState({user:newDocument})
     }
-    console.log("Logout->",this.state)
+    //console.log("Logout->",this.state)
   }
 
   render(){
@@ -56,9 +65,10 @@ class App extends React.Component{
       <div className="App">
         <Navbar user={this.state.user} loginButton={LoginModalButton} logoutButton={LogoutButton}/>
 
-        <ProductList />
-        {/* LoginModal */}
+        <ProductList infoHandler={this.infoHandler} cartHandler={this.cartHandler}/>
+        {/* Modals */}
         <Login  user={this.state.user} loginMethod={this.submitLogin}/>
+        <Info product={this.state.productInfo}/>
       </div>
     )  
   }

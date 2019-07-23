@@ -25,7 +25,9 @@ function Product(props){
                         <button 
                             type="button" 
                             className="btn btn-primary"
-                            onClick={()=>props.addCartHandler(props.data._id)}>Add to Cart</button>
+                            data-toggle="modal" 
+                            data-target="#CartModal"
+                            onClick={()=>props.addCartHandler(props.data)}>Add to Cart</button>
                     </div>
                 </div>
             </div>

@@ -21,20 +21,19 @@ function Info(props){
                         <h4>{props.product.name}</h4>
                         <img src={props.product.image} alt={"image of product "+props.product._id}/>                    
                         <p>{props.product.description}</p>
+                        <h5>Available {props.product.quantity} units</h5>
                     </div>
                     <div className="modal-footer"> 
                         <div className="container">
                             <div className="row">
                                 <div className="col-6">
-                                    <h4>{props.product.price} €</h4>                      
+                                    <h4>Price: {props.product.price} €</h4>                      
                                 </div>
                                 <div className="col-6">
                                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">Close</button>
                                 </div>
                             </div>
                         </div>
-                        
-                        
                     </div>
                 </div>
             </div>

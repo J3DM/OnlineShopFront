@@ -1,5 +1,4 @@
 import React from"react"
-import axios from "axios"
 
 import Product from "./Product";
 
@@ -11,28 +10,11 @@ class ProductList extends React.Component{
         }
     }
 
-    componentDidMount() {
-        axios.get(
-            "//localhost:3001/v1/product/list",
-            {}
-          )
-          .then(
-            (resultArray)=>{
-              this.setState({products:resultArray.data})
-              //console.log(this.state.products.products.length)
-            }
-          )
-          .catch(
-              (err)=>console.log(err)
-          )
-          this.forceUpdate()
-    }
-
     render(){
 
         var productList
-        if(this.state.products.products){
-            productList=this.state.products.products.map(product=>{
+        if(this.props.products.products){
+            productList=this.props.products.products.map(product=>{
                 return <Product key={product._id} data={product} productInfoHandler={this.props.infoHandler} addCartHandler={this.props.cartHandler}/>})
         }else{
             productList=<h1>No products found</h1>

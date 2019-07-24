@@ -24,19 +24,19 @@ class AddCart extends React.Component{
         help:"How many products you want to buy?",
         id:"inputCartQuantity"}
     var CartButton
-    if(this.props.user._id){
+    if(this.props.userLoggedIn==="true"){
         CartButton=<button 
         type="button"
         className="btn btn-primary " 
         onClick={()=>this.props.addToCart(this.props.product._id,this.state.quantity)} 
         aria-label="Add to Cart"
-        >Add to Cart
+        data-dismiss="modal" 
+        aria-label="Close">Add to Cart
         </button>
     }else{
         CartButton=<button 
         type="button"
         className="btn btn-primary " 
-        onClick={()=>this.props.addToCart(this.props.product._id,this.state.quantity)} 
         aria-label="Add to Cart"
         disabled>Add to Cart
         </button>
@@ -58,7 +58,7 @@ class AddCart extends React.Component{
                     <div className="modal-body">
                         <h4>{this.props.product.name}</h4>
                         <img src={this.props.product.image} alt={"image of product "+this.props.product._id}/>                    
-                        <p>{this.props.product.description}</p>
+                        {/* <p>{this.props.product.description}</p> */}
                         <h5>Available {this.props.product.quantity} units</h5>
                         <br/>
                         <div className="row">

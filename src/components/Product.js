@@ -3,7 +3,7 @@ import React from "react"
 function Product(props){
     //console.log("Product Props",props)
     return(
-        <div className="card col-4">
+        <div className="card col-12 col-sm-6 col-lg-4">
             <img src={props.data.image} className="card-img-top" alt={"image of product "+props.data._id}/>
             <div className="card-body">
                 <h4 className="card-title">{props.data.name}</h4>

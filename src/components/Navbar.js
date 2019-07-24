@@ -7,18 +7,31 @@ function Navbar(props){
         Button=""
         UserData=<div className="contaier bg-dark p-4">
                     <div className="row">
-                        <div className="col-6">
-                            <h5 className="text-white">User: {props.user.name}</h5>
-                            <p className="text-muted">Email: {props.user.email}</p>
-                        </div>
-                        <div className="col-6">
+                        <div className="col-12 col-sm-6 text-white" >
                             <div className="row">
-                                <div className="col-6">
-                                    <h5  className="text-white">Shopping Cart</h5>
+                                <div className= "col-6"> 
+                                    <h5>User</h5>
                                 </div>
-                                <div>
-                                    <button className="btn btn-primary">Show</button>
+                                <div className= "col-6"> 
+                                    <h5 className="">{props.user.name}</h5>
                                 </div>
+                            </div>
+                            <div className="row">
+                                <div className= "col-6"> 
+                                    <h6>Email</h6>
+                                </div>
+                                <div className= "col-6"> 
+                                    <h6 className="">{props.user.email}</h6>
+                                </div>
+                            </div>
+                            <div className="row">
+                            </div>
+                                <button 
+                                    className="btn btn-info" data-toggle="modal" data-target="#UserModal">Edit User Details</button>
+                        </div>
+                        <div className="col-12  col-sm-6">
+                            <div className="row">
+                                <p></p>
                             </div>
                             <div  className="row">
                                 <div className="col-6">
@@ -31,6 +44,7 @@ function Navbar(props){
 
                         </div>
                     </div>
+                    <br/>
                     <div className="col-12">
                         {props.logoutButton}
                     </div>

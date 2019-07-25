@@ -6,6 +6,7 @@ import ProductList from "./components/ProductList"
 import Login from "./components/Login"
 import Info from "./components/Info"
 import AddCart from "./components/AddCart"
+import CartModal from "./components/Modals/Cart/CartModal"
 import Navbar from "./components/Navbar"
 import axios from "axios"
 import UserInfo from "./components/UserInfo"
@@ -16,7 +17,8 @@ const NoUser={
                 "password": "",
                 "email": "",
                 "role": "",
-                "shoppingList": []
+                "shoppingList": [],
+                "address":""
               }
 class App extends React.Component{
   constructor(){
@@ -25,7 +27,8 @@ class App extends React.Component{
       user:NoUser,
       productInfo:{},
       products:[],
-      userLoggedIn:"false"
+      userLoggedIn:"false",
+      sale:{}
     }
     this.submitLogin=this.submitLogin.bind(this)
     this.logout=this.logout.bind(this)   
@@ -37,6 +40,9 @@ class App extends React.Component{
     this.changeUserEmail=this.changeUserEmail.bind(this)
     this.changeUserName=this.changeUserName.bind(this)
     this.editUser=this.editUser.bind(this)
+    this.deleteItemHandler=this.deleteItemHandler.bind(this)
+    this.purchaseHandler=this.purchaseHandler.bind(this)
+    this.onChangeHandler=this.onChangeHandler.bind(this)
   }
 
   componentDidMount() {
@@ -53,21 +59,22 @@ class App extends React.Component{
     this.setState({productInfo:data})
   }
 
-  addToCart(productId,quantity){  
-    console.log("Send order to add item to cart")
-    console.log(productId," - ",quantity)
+  addToCart(productName,productId,quantity){  
+    // console.log("Send order to add item to cart")
+    // console.log(productId," - ",quantity)
     var data={
       product:productId,
       quantity:quantity,
       action:"ADD",
-      _id:this.state.user._id
+      _id:this.state.user._id,
+      name:productName
     }
     axios.put(
       "http://192.168.1.142:3001/v1/user/product",
       data
     ).then(
       (result)=>{
-        console.log(result)
+        // console.log(result)
         this.setState({user:result.data.user})
       }
     )
@@ -115,18 +122,17 @@ class App extends React.Component{
         }
     )
     .catch(
-        (err)=>console.log(err)
+        (err)=>{console.log(err)}
     )  
   }
 
   logout(){
-    var newDocument={}
+
     if(this.state.user.email){
-      this.setState({user:newDocument,userLoggedIn:"false"})
+      this.setState({user:NoUser,userLoggedIn:"false"})
     }
     //console.log("Logout->",this.state)
   }
-
   // changeUserParameter(event){
   //   const {name, value, type, checked} = event.target
   //   console.log(event.target)
@@ -160,7 +166,6 @@ class App extends React.Component{
     }
     )
   }
-
   editUser(){
     var data=this.state.user
     axios.put(
@@ -178,6 +183,15 @@ class App extends React.Component{
               )
             }else{
               console.log("Error Updating the user")
+              axios.get("http://192.168.1.142:3001/v1/user?_id="+this.state.user._id)
+              .then((result)=>{
+                this.setState(
+                  {
+                    user:result.data.user,
+                    userLoggedIn:"true"
+                  }
+                )
+              })
             }
         }
     )
@@ -185,25 +199,90 @@ class App extends React.Component{
         (err)=>console.log(err)
     )
   }
+  deleteItemHandler(productId){
+    var data={
+      product:productId,
+      action:"REMOVE",
+      _id:this.state.user._id
+    }
+    axios.put(
+      "http://192.168.1.142:3001/v1/user/product",
+      data
+    ).then(
+      (result)=>{
+        //console.log(result)
+        this.setState({user:result.data.user})
+      }
+    )
+    .catch(
+        (err)=>console.log(err)
+    )
+    
+  }
+  purchaseHandler(){
+    // console.log("purchase")
+    var data={
+      address:this.state.address
+    }
+    axios.post(
+      "http://192.168.1.142:3001/v1/sale?_id="+this.state.user._id,
+      data
+    ).then(
+      (result)=>{
+        console.log(result)
+        this.setState({user:result.data.user,
+                      sale:result.data.sale[0]})
+      }
+    )
+    .catch(
+        (err)=>console.log(err)
+    )
+
+  }
+  onChangeHandler(event){
+    const {name, value, type, checked} = event.target
+    type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
+  }
 
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
     var LogoutButton=<button type="button" className="btn btn-warning" onClick={()=>this.logout()}>Logout</button>
     return (
       <div className="App">
-        <Navbar userLoggedIn={this.state.userLoggedIn} user={this.state.user} loginButton={LoginModalButton} logoutButton={LogoutButton}/>
+        <Navbar
+          userLoggedIn={this.state.userLoggedIn}
+          user={this.state.user}
+          loginButton={LoginModalButton} 
+          logoutButton={LogoutButton}/>
         <div className="container">
-          <ProductList products={this.state.products} infoHandler={this.infoHandler} cartHandler={this.cartHandler}/>
+          <ProductList 
+            products={this.state.products} 
+            infoHandler={this.infoHandler} 
+            cartHandler={this.cartHandler}/>
         </div>
+       
         {/* Modals */}
-        <Login userLoggedIn={this.state.userLoggedIn} user={this.state.user} loginMethod={this.submitLogin}/>
-        <Info product={this.state.productInfo}/>
-        <AddCart userLoggedIn={this.state.userLoggedIn} user={this.state.user} product={this.state.productInfo} addToCart={this.addToCart}/>
+        <Login 
+          userLoggedIn={this.state.userLoggedIn} 
+          user={this.state.user} 
+          loginMethod={this.submitLogin}/>
+        <Info 
+          product={this.state.productInfo}/>
+        <AddCart 
+          userLoggedIn={this.state.userLoggedIn} 
+          user={this.state.user} 
+          product={this.state.productInfo} 
+          addToCart={this.addToCart}/>
         <UserInfo 
           user={this.state.user} 
           onChangeName={this.changeUserName} 
           onChangeEmail={this.changeUserEmail}
           editUser={this.editUser}/>
+        <CartModal user={this.state.user}
+          deleteItemHandler={this.deleteItemHandler}
+          purchase={this.purchaseHandler}
+          onChange={this.onChangeHandler}
+          address={this.state.address}/>
       </div>
     )  
   }

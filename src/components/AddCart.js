@@ -28,15 +28,14 @@ class AddCart extends React.Component{
         CartButton=<button 
         type="button"
         className="btn btn-primary " 
-        onClick={()=>this.props.addToCart(this.props.product._id,this.state.quantity)} 
+        onClick={()=>this.props.addToCart(this.props.product.name,this.props.product._id,this.state.quantity)} 
         aria-label="Add to Cart"
-        data-dismiss="modal" 
-        aria-label="Close">Add to Cart
+        data-dismiss="modal">Add to Cart
         </button>
     }else{
         CartButton=<button 
         type="button"
-        className="btn btn-primary " 
+        className="btn btn-primary" 
         aria-label="Add to Cart"
         disabled>Add to Cart
         </button>
@@ -93,7 +92,7 @@ class AddCart extends React.Component{
                         <div className="container">
                             <div className="row">
                                 <div className="col-6">
-                                {CartButton}
+                                    {CartButton}
                                 </div>
                                 <div className="col-6">
                                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">Close</button>
@@ -106,7 +105,6 @@ class AddCart extends React.Component{
         </div>
         )
     }
-    
 }
 
 export default AddCart

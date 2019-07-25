@@ -60,13 +60,13 @@ class Login extends React.Component{
                             />
                         </form>
             ButtonModal=
-                                    <button 
-                                        type={buttonDataSubmit.type} 
-                                        className={buttonDataSubmit.class} 
-                                        data-dismiss="modal" 
-                                        aria-label="Close"
-                                        onClick={()=>this.props.loginMethod(this.state.email,this.state.password)}
-                                    >Edit</button>
+                        <button 
+                            type={buttonDataSubmit.type} 
+                            className={buttonDataSubmit.class} 
+                            data-dismiss="modal" 
+                            aria-label="Login"
+                            onClick={()=>this.props.loginMethod(this.state.email,this.state.password)}
+                        >Login</button>
             // <Button
             //                 button={buttonDataSubmit}
             //                 onClick={()=>this.props.loginMethod(this.state.email,this.state.password)}

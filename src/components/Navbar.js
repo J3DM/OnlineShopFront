@@ -38,7 +38,10 @@ function Navbar(props){
                                     <h5  className="text-white">Shopping Cart</h5>
                                 </div>
                                 <div>
-                                    <button className="btn btn-primary">Show</button>
+                                    <button 
+                                        className="btn btn-primary"
+                                        data-toggle="modal"
+                                        data-target="#ListModal">Show</button>
                                 </div>
                             </div>
 

@@ -22,7 +22,7 @@ class AddCart extends React.Component{
         purchaseButton=<button
                     type="button"
                     className="btn btn-primary"
-                    data-dismiss="modal" 
+                    data-toggle="modal" data-target="#saleModal"
                     aria-label="Close" 
                     onClick={()=>this.props.purchase()}>Purchase</button>
     }else{

@@ -10,6 +10,7 @@ import CartModal from "./components/Modals/Cart/CartModal"
 import Navbar from "./components/Navbar"
 import axios from "axios"
 import UserInfo from "./components/UserInfo"
+import SaleModal from "./components/Modals/Sale/SaleModal"
 
 const NoUser={
                 "_id": "",
@@ -18,8 +19,17 @@ const NoUser={
                 "email": "",
                 "role": "",
                 "shoppingList": [],
-                "address":""
+                
               }
+const NoSale={
+    "_id": "",
+    "state": "",
+    "user": "",
+    "address": "",
+    "products": [],
+    "totalPrice": 0,
+
+}
 class App extends React.Component{
   constructor(){
     super()
@@ -28,7 +38,8 @@ class App extends React.Component{
       productInfo:{},
       products:[],
       userLoggedIn:"false",
-      sale:{}
+      sale:NoSale,
+      address:""
     }
     this.submitLogin=this.submitLogin.bind(this)
     this.logout=this.logout.bind(this)   
@@ -243,6 +254,25 @@ class App extends React.Component{
     const {name, value, type, checked} = event.target
     type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
   }
+  confirmSale(value){
+    var data={
+      _id:this.sale._id,
+      state:value
+    }
+    axios.put(
+      "http://192.168.1.142:3001/v1/user",
+      data  
+  )
+  .then(
+      (result)=>{
+        this.setState({sale:NoSale})
+      }
+  )
+  .catch(
+      (err)=>console.log(err)
+  )
+  }
+  
 
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
@@ -283,6 +313,9 @@ class App extends React.Component{
           purchase={this.purchaseHandler}
           onChange={this.onChangeHandler}
           address={this.state.address}/>
+        <SaleModal sale={this.state.sale}
+          confirmSale={this.confirmSale}
+          cancelSale={this.cancelSale}/>
       </div>
     )  
   }

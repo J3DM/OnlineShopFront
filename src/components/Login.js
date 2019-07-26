@@ -1,7 +1,8 @@
 import React from "react"
 
 import InputText from "./elements/InputText"
-import Button from "./elements/Button"
+//import Button from "./elements/Button"
+import CloseButton from "./elements/ButtonCloseModal"
 
 class Login extends React.Component{
     constructor(){
@@ -37,17 +38,18 @@ class Login extends React.Component{
             help:"Enter password",
             id:"inptLoginPassword"
         }
-        var buttonDataSubmit={
+/*        var buttonDataSubmit={
             type:"submit",
-            class:"btn-primary btn-block",
+            class:"btn-primary",
             text:"Login"
-        }
+        }*/
         var ModalContent
         var ButtonModal
-
+        var ButtonUser
         if(this.props.userLoggedIn==="true"){
             ModalContent=<h3>{this.props.user.name+" logged in"}</h3>
             ButtonModal=<button type="button" className="close" data-dismiss="modal" aria-label="Close">Close</button>
+            ButtonUser=""
         }else{
             ModalContent=<form>
                             <InputText
@@ -59,14 +61,25 @@ class Login extends React.Component{
                                 onChange={this.onChangeHandler}    
                             />
                         </form>
-            ButtonModal=
-                        <button 
-                            type={buttonDataSubmit.type} 
-                            className={buttonDataSubmit.class} 
-                            data-dismiss="modal" 
-                            aria-label="Login"
-                            onClick={()=>this.props.loginMethod(this.state.email,this.state.password)}
-                        >Login</button>
+            ButtonModal=<div className="col-5">
+                                <button 
+                                    type="" 
+                                    className="btn btn-primary btn-block"
+                                    data-dismiss="modal" 
+                                    aria-label="Login"
+                                    onClick={()=>this.props.loginMethod(this.state.email,this.state.password)}
+                                >Login</button>
+                            </div>
+            ButtonUser=<div className="col-5">
+                                <button 
+                                    type=""
+                                    className="btn btn-success btn-block"
+                                    data-toggle="modal"
+                                    data-dismiss="modal" 
+                                    aria-label="Login"
+                                    data-target="#CreateModal"
+                                >Create</button>
+                            </div>
             // <Button
             //                 button={buttonDataSubmit}
             //                 onClick={()=>this.props.loginMethod(this.state.email,this.state.password)}
@@ -84,7 +97,9 @@ class Login extends React.Component{
                             {ModalContent}
                         </div>
                         <div className="modal-footer">                       
-                            {ButtonModal}
+                        {ButtonUser}
+                        {ButtonModal}
+                        <CloseButton />
                         </div>
                     </div>
                 </div>

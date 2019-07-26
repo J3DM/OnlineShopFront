@@ -3,7 +3,7 @@ import React from "react"
 function Navbar(props){
     var Button
     var UserData
-    if (props.user.email){
+    if (props.user._id!==""){
         Button=""
         UserData=<div className="contaier bg-dark p-4">
                     <div className="row">

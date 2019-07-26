@@ -5,10 +5,11 @@ class AddCart extends React.Component{
     render(props){
         // console.log(this.props)
         // console.log(this.props.sale)
+        var saleItems
         if (this.props.sale.products[0]){
-            var saleItems=this.props.sale.products.map(item=><SaleItem key={item._id} product={item}/>)
+            saleItems=this.props.sale.products.map(item=><SaleItem key={item._id} product={item}/>)
         }else{
-            var saleItems=<p></p>
+            saleItems=<p></p>
         }
         return(
             <div className="modal fade" id="saleModal" tabIndex="-1" role="dialog" aria-hidden="true">

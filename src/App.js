@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar"
 import axios from "axios"
 import UserInfo from "./components/UserInfo"
 import SaleModal from "./components/Modals/Sale/SaleModal"
+import CreateUser from "./components/Modals/User/UserModal"
 
 const NoUser={
                 "_id": "",
@@ -54,6 +55,8 @@ class App extends React.Component{
     this.deleteItemHandler=this.deleteItemHandler.bind(this)
     this.purchaseHandler=this.purchaseHandler.bind(this)
     this.onChangeHandler=this.onChangeHandler.bind(this)
+    this.onChangeHandlerUser=this.onChangeHandlerUser.bind(this)
+    this.createUser=this.createUser.bind(this)
   }
 
   componentDidMount() {
@@ -81,7 +84,7 @@ class App extends React.Component{
       name:productName
     }
     axios.put(
-      "http://192.168.1.142:3001/v1/user/product",
+      "http://192.168.1.145:3001/v1/user/product",
       data
     ).then(
       (result)=>{
@@ -97,7 +100,7 @@ class App extends React.Component{
 
   listProducts() {
     axios.get(
-        "http://192.168.1.142:3001/v1/product/list",
+        "http://192.168.1.145:3001/v1/product/list",
         {}
       )
       .then(
@@ -118,7 +121,7 @@ class App extends React.Component{
         password:password
     }
     axios.post(
-        "http://192.168.1.142:3001/v1/user/login",
+        "http://192.168.1.145:3001/v1/user/login",
         data  
     )
     .then(
@@ -180,7 +183,7 @@ class App extends React.Component{
   editUser(){
     var data=this.state.user
     axios.put(
-        "http://192.168.1.142:3001/v1/user",
+        "http://192.168.1.145:3001/v1/user",
         data  
     )
     .then(
@@ -194,7 +197,7 @@ class App extends React.Component{
               )
             }else{
               console.log("Error Updating the user")
-              axios.get("http://192.168.1.142:3001/v1/user?_id="+this.state.user._id)
+              axios.get("http://192.168.1.145:3001/v1/user?_id="+this.state.user._id)
               .then((result)=>{
                 this.setState(
                   {
@@ -217,7 +220,7 @@ class App extends React.Component{
       _id:this.state.user._id
     }
     axios.put(
-      "http://192.168.1.142:3001/v1/user/product",
+      "http://192.168.1.145:3001/v1/user/product",
       data
     ).then(
       (result)=>{
@@ -236,7 +239,7 @@ class App extends React.Component{
       address:this.state.address
     }
     axios.post(
-      "http://192.168.1.142:3001/v1/sale?_id="+this.state.user._id,
+      "http://192.168.1.145:3001/v1/sale?_id="+this.state.user._id,
       data
     ).then(
       (result)=>{
@@ -249,6 +252,17 @@ class App extends React.Component{
         (err)=>console.log(err)
     )
 
+  
+  }
+  onChangeHandlerUser(event){
+    const {name, value, type, checked} = event.target
+    //type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
+    this.setState((prevSate)=>{
+            var newUser=prevSate.user
+            newUser[name]=value
+            return {user:newUser}
+          }
+        )
   }
   onChangeHandler(event){
     const {name, value, type, checked} = event.target
@@ -260,17 +274,44 @@ class App extends React.Component{
       state:value
     }
     axios.put(
-      "http://192.168.1.142:3001/v1/user",
+      "http://192.168.1.145:3001/v1/user",
       data  
-  )
-  .then(
-      (result)=>{
-        this.setState({sale:NoSale})
-      }
-  )
-  .catch(
-      (err)=>console.log(err)
-  )
+    )
+    .then(
+        (result)=>{
+          this.setState({sale:NoSale})
+        }
+    )
+    .catch(
+        (err)=>console.log(err)
+    )
+    //Update product list
+  }
+  createUser(){
+    console.log(this.state)
+    var data={
+        "name": this.state.user.name,
+        "password": this.state.user.password,
+        "email": this.state.user.email,
+        "role": "CUSTOMER"      
+    }
+    axios.post(
+      "http://192.168.1.145:3001/v1/user",
+      data  
+    )
+    .then(
+        (result)=>{
+          console.log(result.data.user)
+          console.log(this.state.user)
+          this.setState({user:NoUser,userLoggedIn:"false"})
+        }
+    )
+    .catch(
+        (err)=>{
+          this.setState({user:NoUser,userLoggedIn:"false"})
+        }
+    )
+    this.forceUpdate()
   }
   
 
@@ -316,6 +357,9 @@ class App extends React.Component{
         <SaleModal sale={this.state.sale}
           confirmSale={this.confirmSale}
           cancelSale={this.cancelSale}/>
+        <CreateUser user={this.state.user}
+          onChange={this.onChangeHandlerUser}
+          createUser={this.createUser}/>
       </div>
     )  
   }

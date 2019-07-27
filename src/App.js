@@ -12,6 +12,9 @@ import axios from "axios"
 import UserInfo from "./components/UserInfo"
 import SaleModal from "./components/Modals/Sale/SaleModal"
 import CreateUser from "./components/Modals/User/UserModal"
+import Pending from "./components/Modals/Pending/PendingModal"
+
+const url="http://localhost"
 
 const NoUser={
                 "_id": "",
@@ -40,7 +43,8 @@ class App extends React.Component{
       products:[],
       userLoggedIn:"false",
       sale:NoSale,
-      address:""
+      address:"",
+      pendingSales:[]
     }
     this.submitLogin=this.submitLogin.bind(this)
     this.logout=this.logout.bind(this)   
@@ -57,6 +61,8 @@ class App extends React.Component{
     this.onChangeHandler=this.onChangeHandler.bind(this)
     this.onChangeHandlerUser=this.onChangeHandlerUser.bind(this)
     this.createUser=this.createUser.bind(this)
+    this.setPendindSale=this.setPendindSale.bind(this)
+    this.getPendingSales=this.getPendingSales.bind(this)
   }
 
   componentDidMount() {
@@ -84,7 +90,7 @@ class App extends React.Component{
       name:productName
     }
     axios.put(
-      "http://192.168.1.145:3001/v1/user/product",
+      url+":3001/v1/user/product",
       data
     ).then(
       (result)=>{
@@ -100,7 +106,7 @@ class App extends React.Component{
 
   listProducts() {
     axios.get(
-        "http://192.168.1.145:3001/v1/product/list",
+        url+":3001/v1/product/list",
         {}
       )
       .then(
@@ -121,7 +127,7 @@ class App extends React.Component{
         password:password
     }
     axios.post(
-        "http://192.168.1.145:3001/v1/user/login",
+        url+":3001/v1/user/login",
         data  
     )
     .then(
@@ -143,7 +149,7 @@ class App extends React.Component{
   logout(){
 
     if(this.state.user.email){
-      this.setState({user:NoUser,userLoggedIn:"false"})
+      this.setState({user:NoUser,userLoggedIn:"false",pendingSales:[]})
     }
     //console.log("Logout->",this.state)
   }
@@ -183,7 +189,7 @@ class App extends React.Component{
   editUser(){
     var data=this.state.user
     axios.put(
-        "http://192.168.1.145:3001/v1/user",
+        url+":3001/v1/user",
         data  
     )
     .then(
@@ -197,7 +203,7 @@ class App extends React.Component{
               )
             }else{
               console.log("Error Updating the user")
-              axios.get("http://192.168.1.145:3001/v1/user?_id="+this.state.user._id)
+              axios.get(url+":3001/v1/user?_id="+this.state.user._id)
               .then((result)=>{
                 this.setState(
                   {
@@ -220,7 +226,7 @@ class App extends React.Component{
       _id:this.state.user._id
     }
     axios.put(
-      "http://192.168.1.145:3001/v1/user/product",
+      url+":3001/v1/user/product",
       data
     ).then(
       (result)=>{
@@ -239,7 +245,7 @@ class App extends React.Component{
       address:this.state.address
     }
     axios.post(
-      "http://192.168.1.145:3001/v1/sale?_id="+this.state.user._id,
+      url+":3001/v1/sale?_id="+this.state.user._id,
       data
     ).then(
       (result)=>{
@@ -255,7 +261,7 @@ class App extends React.Component{
   
   }
   onChangeHandlerUser(event){
-    const {name, value, type, checked} = event.target
+    const {name, value} = event.target
     //type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
     this.setState((prevSate)=>{
             var newUser=prevSate.user
@@ -274,21 +280,27 @@ class App extends React.Component{
       state:value
     }
     axios.put(
-      "http://192.168.1.145:3001/v1/user",
+      url+":3001/v1/sale",
       data  
     )
     .then(
         (result)=>{
-          this.setState({sale:NoSale})
+          //console.log(result.data)
+          this.setState((prevSate)=>{
+            var newState=prevSate
+            newState.sale=NoSale
+            return newState})
+          //console.log(this.setState)
         }
     )
     .catch(
         (err)=>console.log(err)
     )
+    //this.forceUpdate()
     //Update product list
   }
   createUser(){
-    console.log(this.state)
+    //console.log(this.state)
     var data={
         "name": this.state.user.name,
         "password": this.state.user.password,
@@ -296,13 +308,13 @@ class App extends React.Component{
         "role": "CUSTOMER"      
     }
     axios.post(
-      "http://192.168.1.145:3001/v1/user",
+      url+":3001/v1/user",
       data  
     )
     .then(
         (result)=>{
-          console.log(result.data.user)
-          console.log(this.state.user)
+          // console.log(result.data.user)
+          // console.log(this.state.user)
           this.setState({user:NoUser,userLoggedIn:"false"})
         }
     )
@@ -312,6 +324,27 @@ class App extends React.Component{
         }
     )
     this.forceUpdate()
+  }
+  setPendindSale(sale){
+    this.setState({sale:sale})
+  }
+  getPendingSales(){
+    //console.log("getting pending sales")
+    axios.get(
+      url+":3001/v1/sale/user?user="+this.state.user._id
+      //TODO ADD SOMETHING
+    )
+    .then(
+      (result)=>{
+        console.log(result.data.userSales)
+        this.setState({pendingSales:result.data.userSales})
+      }
+    )
+    .catch(
+      (err)=>{
+        this.setState({pendingSales:[]})
+      }
+    )
   }
   
 
@@ -324,7 +357,9 @@ class App extends React.Component{
           userLoggedIn={this.state.userLoggedIn}
           user={this.state.user}
           loginButton={LoginModalButton} 
-          logoutButton={LogoutButton}/>
+          logoutButton={LogoutButton}
+          getPendingSale={this.getPendingSales}
+          setPendingSale={this.setPendindSale}/>
         <div className="container">
           <ProductList 
             products={this.state.products} 
@@ -360,6 +395,8 @@ class App extends React.Component{
         <CreateUser user={this.state.user}
           onChange={this.onChangeHandlerUser}
           createUser={this.createUser}/>
+        <Pending pending={this.state.pendingSales}
+          setPendingSale={this.setPendindSale}/>
       </div>
     )  
   }

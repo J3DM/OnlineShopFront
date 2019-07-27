@@ -8,6 +8,9 @@ function Navbar(props){
         UserData=<div className="contaier bg-dark p-4">
                     <div className="row">
                         <div className="col-12 col-sm-6 text-white" >
+                            <div className="col-12">
+                                <h3>User data</h3>
+                            </div>
                             <div className="row">
                                 <div className= "col-6"> 
                                     <h5>User</h5>
@@ -24,6 +27,7 @@ function Navbar(props){
                                     <h6 className="">{props.user.email}</h6>
                                 </div>
                             </div>
+                            <br/>
                             <div className="row">
                             </div>
                                 <button 
@@ -31,7 +35,9 @@ function Navbar(props){
                         </div>
                         <div className="col-12  col-sm-6">
                             <div className="row">
-                                <p></p>
+                                <div className="col-12">
+                                    <h3 className="text-white">Purchase</h3>
+                                </div>
                             </div>
                             <div  className="row">
                                 <div className="col-6">
@@ -42,6 +48,21 @@ function Navbar(props){
                                         className="btn btn-primary"
                                         data-toggle="modal"
                                         data-target="#ListModal">Show</button>
+                                </div>
+                            </div>
+                            <br/>
+                            <div  className="row">
+                                <div className="col-6">
+                                    <h5  className="text-white">Pending Sales</h5>
+                                </div>
+                                <div>
+                                    <button 
+                                        className="btn btn-primary"
+                                        data-toggle="modal"
+                                        data-target="#PendingModal"
+                                        onClick={()=>{props.getPendingSale()}}
+                                        // setPendingSale={props.setPendingSale}
+                                        >Show</button>
                                 </div>
                             </div>
 

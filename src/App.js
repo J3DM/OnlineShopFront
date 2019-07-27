@@ -13,6 +13,7 @@ import UserInfo from "./components/UserInfo"
 import SaleModal from "./components/Modals/Sale/SaleModal"
 import CreateUser from "./components/Modals/User/UserModal"
 import Pending from "./components/Modals/Pending/PendingModal"
+import NewProduct from "./components/Modals/NewProduct/NewProductModel"
 
 const url="http://localhost"
 
@@ -397,6 +398,7 @@ class App extends React.Component{
           createUser={this.createUser}/>
         <Pending pending={this.state.pendingSales}
           setPendingSale={this.setPendindSale}/>
+        <NewProduct/>
       </div>
     )  
   }

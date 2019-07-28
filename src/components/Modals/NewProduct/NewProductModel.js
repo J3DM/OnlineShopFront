@@ -4,7 +4,8 @@ import CloseButton from "../../elements/ButtonCloseModal"
 
 class NewProduct extends React.Component{
     render(){
-        var newProductForm=<ProductForm/>
+        //console.log(this.props)
+        var newProductForm=<ProductForm product={this.props.newProduct} onChange={this.props.onChange}/>
         return(
             <div className="modal fade" id="NewProductModal" tabIndex="-1" role="dialog" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered" role="document">
@@ -20,6 +21,12 @@ class NewProduct extends React.Component{
                             {newProductForm}     
                         </div>
                         <div className="modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-primary"
+                                data-dismiss="modal" 
+                                onClick={()=>this.props.postNewProduct()}>Create</button>
+                            {/* <Button button={button} onClick={this.props.postNewProduct}/> */}
                             <CloseButton/>
                         </div>
                     </div>

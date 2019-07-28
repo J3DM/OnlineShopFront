@@ -35,6 +35,14 @@ const NoSale={
     "totalPrice": 0,
 
 }
+const NoProduct={
+  name:"",
+  category:"",
+  price:0,
+  quantity:0,
+  description:"",
+  image:""
+}
 class App extends React.Component{
   constructor(){
     super()
@@ -45,7 +53,8 @@ class App extends React.Component{
       userLoggedIn:"false",
       sale:NoSale,
       address:"",
-      pendingSales:[]
+      pendingSales:[],
+      newProduct:NoProduct
     }
     this.submitLogin=this.submitLogin.bind(this)
     this.logout=this.logout.bind(this)   
@@ -61,9 +70,11 @@ class App extends React.Component{
     this.purchaseHandler=this.purchaseHandler.bind(this)
     this.onChangeHandler=this.onChangeHandler.bind(this)
     this.onChangeHandlerUser=this.onChangeHandlerUser.bind(this)
+    this.onChangeHandlerNewProduct=this.onChangeHandlerNewProduct.bind(this)
     this.createUser=this.createUser.bind(this)
     this.setPendindSale=this.setPendindSale.bind(this)
     this.getPendingSales=this.getPendingSales.bind(this)
+    this.postProduct=this.postProduct.bind(this)
   }
 
   componentDidMount() {
@@ -271,6 +282,16 @@ class App extends React.Component{
           }
         )
   }
+  onChangeHandlerNewProduct(event){
+    const {name, value} = event.target
+    //type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
+    this.setState((prevSate)=>{
+      var product=prevSate.newProduct
+      product[name]=value
+      return {newProduct:product}
+    }
+    )
+  }
   onChangeHandler(event){
     const {name, value, type, checked} = event.target
     type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
@@ -337,7 +358,7 @@ class App extends React.Component{
     )
     .then(
       (result)=>{
-        console.log(result.data.userSales)
+        //console.log(result.data.userSales)
         this.setState({pendingSales:result.data.userSales})
       }
     )
@@ -347,7 +368,34 @@ class App extends React.Component{
       }
     )
   }
-  
+  postProduct(){
+    var data={
+      name:this.state.newProduct.name,
+      category:this.state.newProduct.category,
+      price:this.state.newProduct.price,
+      quantity:this.state.newProduct.quantity,
+      description:this.state.newProduct.description,
+      image:this.state.newProduct.image
+    }
+    axios.post(
+      url+":3001/v1/product",
+      data
+    )
+    .then(
+      (result)=>{
+        axios.get(
+          url+":3001/v1/product/list")
+        .then(
+          (resultArray)=>{
+            this.setState({products:resultArray.data})
+          }
+        )
+      }
+    )
+    .catch(
+      (err)=>console.log(err)
+    )
+  }
 
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
@@ -398,7 +446,9 @@ class App extends React.Component{
           createUser={this.createUser}/>
         <Pending pending={this.state.pendingSales}
           setPendingSale={this.setPendindSale}/>
-        <NewProduct/>
+        <NewProduct newProduct={this.state.newProduct}
+          onChange={this.onChangeHandlerNewProduct}
+          postNewProduct={this.postProduct}/>
       </div>
     )  
   }

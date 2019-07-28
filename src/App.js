@@ -18,22 +18,20 @@ import NewProduct from "./components/Modals/NewProduct/NewProductModel"
 const url="http://localhost"
 
 const NoUser={
-                "_id": "",
-                "name": "",
-                "password": "",
-                "email": "",
-                "role": "",
-                "shoppingList": [],
-                
-              }
+  "_id": "",
+  "name": "",
+  "password": "",
+  "email": "",
+  "role": "",
+  "shoppingList": []
+}
 const NoSale={
-    "_id": "",
-    "state": "",
-    "user": "",
-    "address": "",
-    "products": [],
-    "totalPrice": 0,
-
+  "_id": "",
+  "state": "",
+  "user": "",
+  "address": "",
+  "products": [],
+  "totalPrice": 0
 }
 const NoProduct={
   name:"",
@@ -54,7 +52,8 @@ class App extends React.Component{
       sale:NoSale,
       address:"",
       pendingSales:[],
-      newProduct:NoProduct
+      newProduct:NoProduct,
+      categories:[]
     }
     this.submitLogin=this.submitLogin.bind(this)
     this.logout=this.logout.bind(this)   
@@ -75,6 +74,7 @@ class App extends React.Component{
     this.setPendindSale=this.setPendindSale.bind(this)
     this.getPendingSales=this.getPendingSales.bind(this)
     this.postProduct=this.postProduct.bind(this)
+    this.filterProducts=this.filterProducts.bind(this)
   }
 
   componentDidMount() {
@@ -125,6 +125,9 @@ class App extends React.Component{
         (resultArray)=>{
           this.setState({products:resultArray.data})
           //console.log(this.state.products.products.length)
+          var categories=new Set()
+          this.state.products.products.map(product=>categories.add(product.category))
+          this.setState({categories:categories})
         }
       )
       .catch(
@@ -396,6 +399,37 @@ class App extends React.Component{
       (err)=>console.log(err)
     )
   }
+  filterProducts(type,value){
+    if(value["category"]){
+      console.log("Searching by category: ",value["category"])
+      axios.get(
+        url+":3001/v1/product/category?cat="+value["category"]
+      )
+      .then(
+        (result)=>{
+          console.log(result)
+          this.setState({products:result.data})
+        }
+      )
+      .catch(
+        (err)=>console.log(err)
+      )
+    }else{
+      console.log("Searching by name: ",value)
+      axios.get(
+        url+":3001/v1/product/name?name="+value
+      )
+      .then(
+        (result)=>{
+          console.log(result)
+          this.setState({products:result.data})
+        }
+      )
+      .catch(
+        (err)=>console.log(err)
+      )
+    }
+  }
 
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
@@ -413,7 +447,9 @@ class App extends React.Component{
           <ProductList 
             products={this.state.products} 
             infoHandler={this.infoHandler} 
-            cartHandler={this.cartHandler}/>
+            cartHandler={this.cartHandler}
+            categories={this.state.categories}
+            filter={this.filterProducts}/>
         </div>
        
         {/* Modals */}

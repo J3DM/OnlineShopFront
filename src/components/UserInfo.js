@@ -45,19 +45,19 @@ class UserInfo extends React.Component{
                                 <div className="col-6">
                                     <button 
                                         type="button" 
-                                        className="close" 
-                                        data-dismiss="modal" 
-                                        aria-label="Close"
-                                    >Close</button>
-                                </div>
-                                <div className="col-6">
-                                    <button 
-                                        type="button" 
                                         className="btn btn-warning" 
                                         data-dismiss="modal" 
                                         aria-label="Close"
                                         onClick={this.props.editUser}
                                     >Edit</button>
+                                </div>
+                                <div className="col-6">
+                                    <button 
+                                        type="button" 
+                                        className="close" 
+                                        data-dismiss="modal" 
+                                        aria-label="Close"
+                                    >Close</button>
                                 </div>
                             </div>
                         </div>

@@ -70,7 +70,7 @@ function Navbar(props){
                     </div>
                     <br/>
                     <div className="col-12">
-                        <button type="button" className="btn btn-success" data-toggle="modal" data-target="#NewProductModal">New Product</button>
+                        <button type="button" className="btn btn-success mr-sm-2" data-toggle="modal" data-target="#NewProductModal">New Product</button>
                         {props.logoutButton}
                     </div>
                 </div>

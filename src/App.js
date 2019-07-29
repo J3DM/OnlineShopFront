@@ -14,6 +14,7 @@ import SaleModal from "./components/Modals/Sale/SaleModal"
 import CreateUser from "./components/Modals/User/UserModal"
 import Pending from "./components/Modals/Pending/PendingModal"
 import NewProduct from "./components/Modals/NewProduct/NewProductModel"
+import RoleModal from "./components/Modals/Roles/RoleModal"
 
 const url="http://localhost"
 
@@ -75,6 +76,7 @@ class App extends React.Component{
     this.getPendingSales=this.getPendingSales.bind(this)
     this.postProduct=this.postProduct.bind(this)
     this.filterProducts=this.filterProducts.bind(this)
+    this.changeUserRole=this.changeUserRole.bind(this)
   }
 
   componentDidMount() {
@@ -401,13 +403,13 @@ class App extends React.Component{
   }
   filterProducts(type,value){
     if(value["category"]){
-      console.log("Searching by category: ",value["category"])
+      //console.log("Searching by category: ",value["category"])
       axios.get(
         url+":3001/v1/product/category?cat="+value["category"]
       )
       .then(
         (result)=>{
-          console.log(result)
+        //  console.log(result)
           this.setState({products:result.data})
         }
       )
@@ -415,13 +417,13 @@ class App extends React.Component{
         (err)=>console.log(err)
       )
     }else{
-      console.log("Searching by name: ",value)
+      //console.log("Searching by name: ",value)
       axios.get(
         url+":3001/v1/product/name?name="+value
       )
       .then(
         (result)=>{
-          console.log(result)
+        //  console.log(result)
           this.setState({products:result.data})
         }
       )
@@ -429,6 +431,25 @@ class App extends React.Component{
         (err)=>console.log(err)
       )
     }
+  }
+  changeUserRole(email,role){
+    console.log(email,role)
+    var data={
+      email:email,
+      role:role
+    }
+    axios.put(
+      url+":3001/v1/user/role",
+      data
+    ).then(
+      (result)=>{
+        console.log("Updated")
+      }
+    ).catch(
+      (err)=>{
+        console.log("Not updated")
+      }
+    )
   }
 
   render(){
@@ -485,6 +506,7 @@ class App extends React.Component{
         <NewProduct newProduct={this.state.newProduct}
           onChange={this.onChangeHandlerNewProduct}
           postNewProduct={this.postProduct}/>
+        <RoleModal updateRole={this.changeUserRole}/>
       </div>
     )  
   }

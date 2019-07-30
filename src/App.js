@@ -2,6 +2,7 @@ import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
 
+
 import ProductList from "./components/ProductList"
 import Login from "./components/Login"
 import Info from "./components/Info"
@@ -15,6 +16,7 @@ import CreateUser from "./components/Modals/User/UserModal"
 import Pending from "./components/Modals/Pending/PendingModal"
 import NewProduct from "./components/Modals/NewProduct/NewProductModel"
 import RoleModal from "./components/Modals/Roles/RoleModal"
+import Alert from "./components/Modals/Alert/AlertBox"
 
 const url="http://localhost"
 
@@ -54,8 +56,10 @@ class App extends React.Component{
       address:"",
       pendingSales:[],
       newProduct:NoProduct,
-      categories:[]
+      categories:[],
+      alert:{title:"",msg:"",show:false,class:""}
     }
+    
     this.submitLogin=this.submitLogin.bind(this)
     this.logout=this.logout.bind(this)   
     this.cartHandler=this.cartHandler.bind(this)
@@ -149,13 +153,14 @@ class App extends React.Component{
     )
     .then(
         (result)=>{
-            this.setState(
-              {
-                user:result.data.user,
-                userLoggedIn:"true"
-              }
-            )
-      //      console.log("Login->",this.state)
+          this.setState(
+            {
+              user:result.data.user,
+              userLoggedIn:"true",
+              alert:{class:"alert-success",title:"Logging",msg:"User "+result.data.user.name+" logged in",show:true}
+            }
+          )
+            console.log("Login->",this.state)
         }
     )
     .catch(
@@ -170,16 +175,6 @@ class App extends React.Component{
     }
     //console.log("Logout->",this.state)
   }
-  // changeUserParameter(event){
-  //   const {name, value, type, checked} = event.target
-  //   console.log(event.target)
-  //   this.setState((prevSate)=>{
-  //       var newUser=prevSate.user
-  //       newUser.name=event.target.value
-  //       return {user:newUser}
-  //     }
-  //   )
-  // }
   changeUserName(event){
     const {value} = event.target
     // console.log("New value for name->",value)
@@ -455,6 +450,7 @@ class App extends React.Component{
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
     var LogoutButton=<button type="button" className="btn btn-warning" onClick={()=>this.logout()}>Logout</button>
+
     return (
       <div className="App">
         <Navbar
@@ -464,6 +460,7 @@ class App extends React.Component{
           logoutButton={LogoutButton}
           getPendingSale={this.getPendingSales}
           setPendingSale={this.setPendindSale}/>
+        <Alert alert={this.state.alert}/>
         <div className="container">
           <ProductList 
             products={this.state.products} 

@@ -1,8 +1,38 @@
 import React from "react"
 
 function Navbar(props){
+    //console.log(props)
     var Button
     var UserData
+    var RoleButton
+    var ProductButton
+    if(props.user.role==="MANAGER"){
+        ProductButton= <button 
+                type="button" 
+                className="btn btn-info mr-sm-2" 
+                data-toggle="modal" 
+                data-target="#NewProductModal"
+            >New Product</button>
+    }else{
+        ProductButton= ""
+    }
+    if(props.user.role==="ADMIN"){
+        RoleButton=
+            <button 
+                type="button" 
+                className="btn btn-success mr-sm-2" 
+                data-toggle="modal" 
+                data-target="#RoleModal"
+            >Give Roles</button>
+        ProductButton= <button 
+                type="button" 
+                className="btn btn-info mr-sm-2" 
+                data-toggle="modal" 
+                data-target="#NewProductModal"
+            >New Product</button>
+    }else{
+        RoleButton=""
+    }
     if (props.user._id!==""){
         Button=""
         UserData=<div className="contaier bg-dark p-4">
@@ -70,8 +100,8 @@ function Navbar(props){
                     </div>
                     <br/>
                     <div className="col-12">
-                    <button type="button" className="btn btn-success mr-sm-2" data-toggle="modal" data-target="#RoleModal">Give Roles</button>
-                    <button type="button" className="btn btn-info mr-sm-2" data-toggle="modal" data-target="#NewProductModal">New Product</button>
+                        {RoleButton}
+                        {ProductButton}
                         {props.logoutButton}
                     </div>
                 </div>
@@ -94,6 +124,7 @@ function Navbar(props){
                  <h3 className="text-white">OnlineShop</h3>
              </div>
              <div className="col-3">
+                
                 {Button}
              </div>
         </nav>

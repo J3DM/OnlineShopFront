@@ -57,7 +57,7 @@ class App extends React.Component{
       pendingSales:[],
       newProduct:NoProduct,
       categories:[],
-      alert:{title:"",msg:"",show:false,class:""}
+      alerts:[]
     }
     
     this.submitLogin=this.submitLogin.bind(this)
@@ -81,6 +81,7 @@ class App extends React.Component{
     this.postProduct=this.postProduct.bind(this)
     this.filterProducts=this.filterProducts.bind(this)
     this.changeUserRole=this.changeUserRole.bind(this)
+    this.removeAlert=this.removeAlert.bind(this)
   }
 
   componentDidMount() {
@@ -153,14 +154,16 @@ class App extends React.Component{
     )
     .then(
         (result)=>{
-          this.setState(
-            {
+          this.setState(prevState=>{
+            var alertArray=prevState.alerts
+            alertArray.push({class:"alert-success",title:"Logging",msg:"User "+result.data.user.name+" logged in",show:true})
+            //console.log(alertArray)
+            return {
               user:result.data.user,
               userLoggedIn:"true",
-              alert:{class:"alert-success",title:"Logging",msg:"User "+result.data.user.name+" logged in",show:true}
+              alerts:alertArray
             }
-          )
-            console.log("Login->",this.state)
+          })
         }
     )
     .catch(
@@ -446,6 +449,12 @@ class App extends React.Component{
       }
     )
   }
+  removeAlert(id){
+    this.setState(prevState=>{
+      var alertArray=prevState.alerts
+      return{alerts:alertArray.splice(id,1)}
+    })
+  }
 
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
@@ -460,7 +469,7 @@ class App extends React.Component{
           logoutButton={LogoutButton}
           getPendingSale={this.getPendingSales}
           setPendingSale={this.setPendindSale}/>
-        <Alert alert={this.state.alert}/>
+        <Alert alerts={this.state.alerts} onClick={this.removeAlert}/>
         <div className="container">
           <ProductList 
             products={this.state.products} 

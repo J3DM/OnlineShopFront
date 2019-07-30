@@ -1,18 +1,22 @@
 import React from "react"
+import AlertLine from "./AlertLine"
 
 function Alert(props){
-    console.log(props)
-    if(props.alert.show){
+    //var id=0
+    var alerts=props.alerts.map((alertItem,id)=>
+        {
+            return <AlertLine key={id} alert={alertItem} onClick={props.onClick} id={id}/>
+      //      id++
+        }
+    )
+    if(props.alerts[0]){
         return(
-            <div className={"alert "+props.alert.class+" alert-dismissible fade show"} role="alert">
-                <strong>{props.alert.title}</strong> {props.alert.msg}.
-                <button type="button" className="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div>
+                {alerts}
             </div>
         )
     }else{
-        return null
+        return ""
     }
 }
 

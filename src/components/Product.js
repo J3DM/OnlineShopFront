@@ -2,8 +2,24 @@ import React from "react"
 
 function Product(props){
     //console.log("Product Props",props)
+    var buttonCart
+    if(props.data.quantity>0){
+        buttonCart=<button 
+        type="button" 
+        className="btn btn-primary"
+        data-toggle="modal" 
+        data-target="#CartModal"
+        onClick={()=>props.addCartHandler(props.data)}>Add to Cart</button>
+    }else{
+        buttonCart=<button 
+        type="button" 
+        className="btn btn-primary"
+        data-toggle="modal" 
+        data-target="#CartModal"
+        disabled>Add to Cart</button>
+    }
     return(
-        <div className="card col-12 col-sm-6 col-lg-4">
+        <div className={"card col-12 col-sm-6 col-lg-4 mb-2"+(props.data.quantity>0?"":" border-danger text-danger")}>
             <img src={props.data.image} className="card-img-top" alt={"image of product "+props.data._id}/>
             <div className="card-body">
                 <h4 className="card-title">{props.data.name}</h4>
@@ -22,12 +38,7 @@ function Product(props){
                         </span>
                     </div>
                     <div className="col-6">
-                        <button 
-                            type="button" 
-                            className="btn btn-primary"
-                            data-toggle="modal" 
-                            data-target="#CartModal"
-                            onClick={()=>props.addCartHandler(props.data)}>Add to Cart</button>
+                        {buttonCart}
                     </div>
                 </div>
             </div>

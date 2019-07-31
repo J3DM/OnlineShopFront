@@ -44,6 +44,7 @@ const NoProduct={
   description:"",
   image:""
 }
+
 class App extends React.Component{
   constructor(){
     super()
@@ -82,6 +83,24 @@ class App extends React.Component{
     this.filterProducts=this.filterProducts.bind(this)
     this.changeUserRole=this.changeUserRole.bind(this)
     this.removeAlert=this.removeAlert.bind(this)
+    this.showAlert=this.showAlert.bind(this)
+  }
+
+  showAlert(className,title,msg){
+    this.setState(prevState=>{
+      var alertArray=prevState.alerts
+      alertArray.push(
+        {
+          class:className,
+          title:title,
+          msg:msg,
+          show:true
+        }
+      )
+      return {
+        alerts:alertArray
+      }
+    })
   }
 
   componentDidMount() {
@@ -115,10 +134,11 @@ class App extends React.Component{
       (result)=>{
         // console.log(result)
         this.setState({user:result.data.user})
+        this.showAlert("alert-info","Product added",productName+" added to the shopping cart")
       }
     )
     .catch(
-        (err)=>console.log(err)
+        (err)=>this.showAlert("alert-danger","Error Add product to Cart",productName+" was not add to the shopping cart")
     )
     
   }
@@ -138,7 +158,7 @@ class App extends React.Component{
         }
       )
       .catch(
-          (err)=>console.log(err)
+          (err)=>this.showAlert("alert-danger","Error listing products","Recover products failed")
       )
       this.forceUpdate()
   }
@@ -167,13 +187,31 @@ class App extends React.Component{
         }
     )
     .catch(
-        (err)=>{console.log(err)}
+        (err)=>this.showAlert("alert-danger","Error logging in","User could nor be recovered with the data provided")
     )  
   }
 
   logout(){
 
     if(this.state.user.email){
+      this.setState(prevState=>{
+        var alertArray=prevState.alerts
+        alertArray.push(
+          {
+            class:"alert-warning",
+            title:"Logging",
+            msg:"User "+prevState.user.name+" logged out",
+            show:true
+          }
+        )
+        //console.log(alertArray)
+        return {
+          user:NoUser,
+          userLoggedIn:"true",
+          alerts:alertArray
+        }
+      })
+
       this.setState({user:NoUser,userLoggedIn:"false",pendingSales:[]})
     }
     //console.log("Logout->",this.state)
@@ -216,6 +254,7 @@ class App extends React.Component{
                   userLoggedIn:"true"
                 }
               )
+              this.showAlert("alert-success","Update User data","was successfull")
             }else{
               console.log("Error Updating the user")
               axios.get(url+":3001/v1/user?_id="+this.state.user._id)
@@ -227,11 +266,12 @@ class App extends React.Component{
                   }
                 )
               })
+              this.showAlert("alert-warning","Update User data","was un-successfull")
             }
         }
     )
     .catch(
-        (err)=>console.log(err)
+        (err)=>this.showAlert("alert-danger","Error updating the user","failed when updating with the data provided")
     )
   }
   deleteItemHandler(productId){
@@ -247,10 +287,11 @@ class App extends React.Component{
       (result)=>{
         //console.log(result)
         this.setState({user:result.data.user})
+        this.showAlert("alert-info","Shopping cart item"," was removed successfully")
       }
     )
     .catch(
-        (err)=>console.log(err)
+        (err)=>this.showAlert("alert-danger","Error cart remove","failed to remove an item from the shopping cart")
     )
     
   }
@@ -267,10 +308,11 @@ class App extends React.Component{
         console.log(result)
         this.setState({user:result.data.user,
                       sale:result.data.sale[0]})
+        this.showAlert("alert-success","Sale order","was successfull created")
       }
     )
     .catch(
-        (err)=>console.log(err)
+        (err)=>this.showAlert("alert-danger","Error creating a sale","Failed to create a sale for the logged user")
     )
 
   
@@ -316,10 +358,16 @@ class App extends React.Component{
             newState.sale=NoSale
             return newState})
           //console.log(this.setState)
+          if (value==="CONFIRM"){
+            this.showAlert("alert-success","Sale","was successfull confirmed")
+          }else{
+            this.showAlert("alert-warning","Sale","was successfull cancelled")
+          }
+          
         }
     )
     .catch(
-        (err)=>console.log(err)
+        (err)=>this.showAlert("alert-danger","Error sale confirm","Sale could not be updated")
     )
     //this.forceUpdate()
     //Update product list
@@ -341,11 +389,13 @@ class App extends React.Component{
           // console.log(result.data.user)
           // console.log(this.state.user)
           this.setState({user:NoUser,userLoggedIn:"false"})
+          this.showAlert("alert-success","User","was successfull created")
         }
     )
     .catch(
         (err)=>{
           this.setState({user:NoUser,userLoggedIn:"false"})
+          this.showAlert("alert-danger","Error creating user","Create user process failed")
         }
     )
     this.forceUpdate()
@@ -363,11 +413,13 @@ class App extends React.Component{
       (result)=>{
         //console.log(result.data.userSales)
         this.setState({pendingSales:result.data.userSales})
+        this.showAlert("alert-info","Pending Sale"," recovered")
       }
     )
     .catch(
       (err)=>{
         this.setState({pendingSales:[]})
+        this.showAlert("alert-danger","Error getting sales from the user","Recover sales from the logged user failed")
       }
     )
   }
@@ -390,13 +442,31 @@ class App extends React.Component{
           url+":3001/v1/product/list")
         .then(
           (resultArray)=>{
-            this.setState({products:resultArray.data})
+            this.setState(prevState=>{
+              var alertArray=prevState.alerts
+              alertArray.push(
+                {
+                  class:"alert-success",
+                  title:"New Product "+this.state.newProduct.name,
+                  msg:"New product added",
+                  show:true
+                }
+              )
+              return {
+                products:resultArray.data,
+                alerts:alertArray,
+                newProduct:NoProduct
+              }
+            })
+            //this.setState({products:resultArray.data})
           }
         )
       }
     )
     .catch(
-      (err)=>console.log(err)
+      (err)=>{
+        this.showAlert("alert-danger","Error creating a product","Create product process failed")
+      }
     )
   }
   filterProducts(type,value){
@@ -441,19 +511,29 @@ class App extends React.Component{
       data
     ).then(
       (result)=>{
-        console.log("Updated")
+        this.setState(prevState=>{
+          var alertArray=prevState.alerts
+          alertArray.push(
+            {
+              class:"alert-success",
+              title:"Roles",
+              msg:"User with email "+email+" his new role is "+role,
+              show:true
+            }
+          )
+          return {
+            alerts:alertArray
+          }
+        })
       }
     ).catch(
       (err)=>{
-        console.log("Not updated")
+        this.showAlert("alert-danger","Errorchanging role","No user could be updated with the data provided")
       }
     )
   }
   removeAlert(id){
-    this.setState(prevState=>{
-      var alertArray=prevState.alerts
-      return{alerts:alertArray.splice(id,1)}
-    })
+    this.setState({alerts:[]})
   }
 
   render(){

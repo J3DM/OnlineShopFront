@@ -37,7 +37,14 @@ class ProductList extends React.Component{
                 <div className="accordion" id="accordionExample">
                     <div className="card">
                         <div className="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            <h3>ProductList</h3>
+                            <div className="row">
+                            <div className="col-11">
+                                <h2>ProductList</h2>
+                            </div>
+                            <div className="col-1">
+                                <img className="rounded float-right" src="https://png.pngtree.com/svg/20150407/4ad49cd89d.svg" width="40"alt=""/>
+                            </div>
+                            </div>
                         </div>
                     </div>
                     <div id="collapseOne" className="collapse " aria-labelledby="headingOne" data-parent="#accordionExample">

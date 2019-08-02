@@ -547,7 +547,7 @@ class App extends React.Component{
     this.setState({alerts:[]})
   }
   editProduct(){
-    console.log("Edit product")
+    //console.log("Edit product")
     var data={
       _id:this.state.productInfo._id,
       name:this.state.productInfo.name,
@@ -572,7 +572,19 @@ class App extends React.Component{
     )
   }
   deleteProduct(){
-    console.log("Delete product")
+    // console.log("Delete product")
+    axios.delete(
+      url+":3001/v1/product?id="+this.state.productInfo._id,
+    ).then(
+      (result)=>{
+        this.listProducts()
+        this.showAlert("alert-warning","Product Deleted","the product "+this.state.productInfo._id+" was removed successfully")
+      }
+    ).catch(
+      (err)=>{
+        this.showAlert("alert-danger","Error deleting product","No product could be deleted with the id provided")
+      }
+    )
   }
 
 

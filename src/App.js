@@ -17,6 +17,7 @@ import Pending from "./components/Modals/Pending/PendingModal"
 import NewProduct from "./components/Modals/NewProduct/NewProductModel"
 import RoleModal from "./components/Modals/Roles/RoleModal"
 import Alert from "./components/Modals/Alert/AlertBox"
+import EditProduct from "./components/Modals/EditProduct/EditProductModal"
 
 const url="http://localhost"
 
@@ -50,7 +51,7 @@ class App extends React.Component{
     super()
     this.state={
       user:NoUser,
-      productInfo:{},
+      productInfo:NoProduct,
       products:[],
       userLoggedIn:"false",
       sale:NoSale,
@@ -84,6 +85,10 @@ class App extends React.Component{
     this.changeUserRole=this.changeUserRole.bind(this)
     this.removeAlert=this.removeAlert.bind(this)
     this.showAlert=this.showAlert.bind(this)
+    this.confirmSale=this.confirmSale.bind(this)
+    this.onChangeHandlerEditProduct=this.onChangeHandlerEditProduct.bind(this)
+    this.deleteProduct=this.deleteProduct.bind(this)
+    this.editProduct=this.editProduct.bind(this)
   }
 
   showAlert(className,title,msg){
@@ -298,6 +303,7 @@ class App extends React.Component{
   purchaseHandler(){
     // console.log("purchase")
     var data={
+      _id:this.state.user._id,
       address:this.state.address
     }
     axios.post(
@@ -305,7 +311,7 @@ class App extends React.Component{
       data
     ).then(
       (result)=>{
-        console.log(result)
+        // console.log(result)
         this.setState({user:result.data.user,
                       sale:result.data.sale[0]})
         this.showAlert("alert-success","Sale order","was successfull created")
@@ -327,6 +333,16 @@ class App extends React.Component{
           }
         )
   }
+  onChangeHandlerEditProduct(event){
+    const {name, value} = event.target
+    //type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
+    this.setState((prevSate)=>{
+            var editProduct=prevSate.productInfo
+            editProduct[name]=value
+            return {product:editProduct}
+          }
+        )
+  }
   onChangeHandlerNewProduct(event){
     const {name, value} = event.target
     //type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
@@ -342,32 +358,27 @@ class App extends React.Component{
     type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
   }
   confirmSale(value){
+    // console.log("Request:",this.state.sale._id,value)
     var data={
-      _id:this.sale._id,
+      _id:this.state.sale._id,
       state:value
     }
     axios.put(
       url+":3001/v1/sale",
-      data  
-    )
-    .then(
-        (result)=>{
-          //console.log(result.data)
-          this.setState((prevSate)=>{
-            var newState=prevSate
-            newState.sale=NoSale
-            return newState})
-          //console.log(this.setState)
-          if (value==="CONFIRM"){
-            this.showAlert("alert-success","Sale","was successfull confirmed")
-          }else{
-            this.showAlert("alert-warning","Sale","was successfull cancelled")
-          }
-          
+      data
+    ).then(
+      (result)=>{
+        // console.log("BBDD Response:",result.data.sale._id,result.data.sale.state)
+        var msg=result.data.sale._id+" was successfully "+result.data.sale.state
+        this.setState({sale:NoSale})
+        if(result.data.sale.state==="REJECTED"){
+          this.showAlert("alert-warning","Sale",msg)
+        }else{
+          this.showAlert("alert-success","Sale",msg)
         }
-    )
-    .catch(
-        (err)=>this.showAlert("alert-danger","Error sale confirm","Sale could not be updated")
+      }
+    ).catch(
+        (err)=>console.log(err)
     )
     //this.forceUpdate()
     //Update product list
@@ -501,7 +512,7 @@ class App extends React.Component{
     }
   }
   changeUserRole(email,role){
-    console.log(email,role)
+    //console.log(email,role)
     var data={
       email:email,
       role:role
@@ -535,6 +546,35 @@ class App extends React.Component{
   removeAlert(id){
     this.setState({alerts:[]})
   }
+  editProduct(){
+    console.log("Edit product")
+    var data={
+      _id:this.state.productInfo._id,
+      name:this.state.productInfo.name,
+      category:this.state.productInfo.category,
+      price:this.state.productInfo.price,
+      quantity:this.state.productInfo.quantity,
+      description:this.state.productInfo.description,
+      image:this.state.productInfo.image
+    }
+    axios.put(
+      url+":3001/v1/product",
+      data
+    ).then(
+      (result)=>{
+        this.listProducts()
+        this.showAlert("alert-success","Product Updated","the product "+result.data.product.name+" was updated successfully")
+      }
+    ).catch(
+      (err)=>{
+        this.showAlert("alert-danger","Error updating product","No product could be updated with the data provided")
+      }
+    )
+  }
+  deleteProduct(){
+    console.log("Delete product")
+  }
+
 
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
@@ -565,6 +605,7 @@ class App extends React.Component{
           user={this.state.user} 
           loginMethod={this.submitLogin}/>
         <Info 
+          user={this.state.user}
           product={this.state.productInfo}/>
         <AddCart 
           userLoggedIn={this.state.userLoggedIn} 
@@ -593,6 +634,11 @@ class App extends React.Component{
           onChange={this.onChangeHandlerNewProduct}
           postNewProduct={this.postProduct}/>
         <RoleModal updateRole={this.changeUserRole}/>
+        <EditProduct product={this.state.productInfo} 
+          onChange={this.onChangeHandlerEditProduct}
+          editProduct={this.editProduct}
+          deleteProduct={this.deleteProduct}/> 
+
       </div>
     )  
   }

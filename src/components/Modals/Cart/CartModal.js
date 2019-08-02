@@ -19,14 +19,21 @@ class AddCart extends React.Component{
     var purchaseButton
     if (this.props.user.shoppingList[0]){
         cartItems=this.props.user.shoppingList.map(item=><CartLine key={item._id} product={item} deleteItemHandler={this.props.deleteItemHandler}/>)
-        purchaseButton=<button
-                    type="button"
-                    className="btn btn-primary"
-                    data-dismiss="modal"
-                    data-toggle="modal" 
-                    data-target="#saleModal"
-                    aria-label="Close" 
-                    onClick={()=>this.props.purchase()}>Purchase</button>
+        if(this.props.address!==""){
+            purchaseButton=<button
+                        type="button"
+                        className="btn btn-primary"
+                        data-dismiss="modal"
+                        data-toggle="modal" 
+                        data-target="#saleModal"
+                        aria-label="Close" 
+                        onClick={()=>this.props.purchase()}>Purchase</button>
+        }else{
+            purchaseButton=<button
+                type="button"
+                className="btn btn-primary"
+                disabled>Purchase</button>    
+        }
     }else{
         cartItems=<h3>No items found in the shopping cart</h3>
         purchaseButton=<button

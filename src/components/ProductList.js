@@ -20,7 +20,13 @@ class ProductList extends React.Component{
         var productList
         if(this.props.products.products){
             productList=this.props.products.products.map(product=>{
-                return <Product key={product._id} data={product} productInfoHandler={this.props.infoHandler} addCartHandler={this.props.cartHandler}/>})
+                return <Product 
+                    key={product._id} 
+                    user={this.props.user} 
+                    data={product} 
+                    productInfoHandler={this.props.infoHandler} 
+                    addCartHandler={this.props.cartHandler}/>
+            })
         }else{
             productList=<h1>No products found</h1>
         }

@@ -3,6 +3,12 @@ import React from "react"
 
 function Info(props){
     //console.log("Product Props",props)
+    var editProductButton
+    if(props.user.role==="ADMIN" ||props.user.role==="MANAGER"){
+        editProductButton=<button type="button" className="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#EditProductModal" aria-label="Close">Edit</button>
+    }else{
+        editProductButton=""
+    }
     return(
         <div className="modal fade" id="InfoModal" tabIndex="-1" role="dialog" aria-hidden="true">
             <div className="modal-dialog modal-dialog-centered" role="document">
@@ -30,6 +36,7 @@ function Info(props){
                                     <h4>Price: {props.product.price} €</h4>                      
                                 </div>
                                 <div className="col-6">
+                                    {editProductButton}
                                     <button type="button" className="close" data-dismiss="modal" aria-label="Close">Close</button>
                                 </div>
                             </div>

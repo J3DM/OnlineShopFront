@@ -1,7 +1,7 @@
 import React from "react"
 
 function AlertLine(props){
-    console.log(props)
+    //console.log(props)
     return(
         <div className={"alert "+props.alert.class+" alert-dismissible fade show"} role="alert">
             <strong>{props.alert.title}</strong> {props.alert.msg}.

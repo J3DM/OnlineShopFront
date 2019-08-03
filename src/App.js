@@ -59,7 +59,8 @@ class App extends React.Component{
       pendingSales:[],
       newProduct:NoProduct,
       categories:[],
-      alerts:[]
+      alerts:[],
+      showAll:false
     }
     
     this.submitLogin=this.submitLogin.bind(this)
@@ -89,6 +90,7 @@ class App extends React.Component{
     this.onChangeHandlerEditProduct=this.onChangeHandlerEditProduct.bind(this)
     this.deleteProduct=this.deleteProduct.bind(this)
     this.editProduct=this.editProduct.bind(this)
+    this.showAllSwitch=this.showAllSwitch.bind(this)
   }
 
   showAlert(className,title,msg){
@@ -149,8 +151,9 @@ class App extends React.Component{
   }
 
   listProducts() {
-    axios.get(
-        url+":3001/v1/product/list",
+    if(this.state.showAll){
+      axios.get(
+        url+":3001/v1/product/listAll",
         {}
       )
       .then(
@@ -165,6 +168,24 @@ class App extends React.Component{
       .catch(
           (err)=>this.showAlert("alert-danger","Error listing products","Recover products failed")
       )
+    }else{
+      axios.get(
+          url+":3001/v1/product/list",
+          {}
+        )
+        .then(
+          (resultArray)=>{
+            this.setState({products:resultArray.data})
+            //console.log(this.state.products.products.length)
+            var categories=new Set()
+            this.state.products.products.map(product=>categories.add(product.category))
+            this.setState({categories:categories})
+          }
+        )
+        .catch(
+            (err)=>this.showAlert("alert-danger","Error listing products","Recover products failed")
+        )
+    }
       this.forceUpdate()
   }
   
@@ -355,7 +376,9 @@ class App extends React.Component{
   }
   onChangeHandler(event){
     const {name, value, type, checked} = event.target
-    type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value }) 
+    console.log(name,value,checked)
+    type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value })
+    console.log(this.state.showAll)
   }
   confirmSale(value){
     // console.log("Request:",this.state.sale._id,value)
@@ -586,7 +609,12 @@ class App extends React.Component{
       }
     )
   }
-
+  showAllSwitch(){
+    this.setState(prevState=>{
+      return {showAll:!prevState.showAll}
+    })
+    this.listProducts()
+  }
 
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
@@ -600,7 +628,9 @@ class App extends React.Component{
           loginButton={LoginModalButton} 
           logoutButton={LogoutButton}
           getPendingSale={this.getPendingSales}
-          setPendingSale={this.setPendindSale}/>
+          setPendingSale={this.setPendindSale}
+          showAll={this.state.showAll}
+          onChange={this.showAllSwitch}/>
         <Alert alerts={this.state.alerts} onClick={this.removeAlert}/>
         <div className="container">
           <ProductList 
@@ -649,7 +679,7 @@ class App extends React.Component{
         <EditProduct product={this.state.productInfo} 
           onChange={this.onChangeHandlerEditProduct}
           editProduct={this.editProduct}
-          deleteProduct={this.deleteProduct}/> 
+          deleteProduct={this.deleteProduct}/>
 
       </div>
     )  

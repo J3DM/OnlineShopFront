@@ -6,6 +6,20 @@ class EditProduct extends React.Component{
     render(){
         //console.log(this.props)
         var newProductForm=<EditProductForm product={this.props.product} onChange={this.props.onChange}/>
+        var ActionButton=""
+        if(this.props.product.state==="DELETED"){
+            ActionButton=<button
+                type="button"
+                className="btn btn-danger"
+                data-dismiss="modal" 
+                onClick={()=>this.props.deleteProduct()}>Enable</button>                        
+        }else{
+            ActionButton=<button
+                type="button"
+                className="btn btn-danger"
+                data-dismiss="modal" 
+                onClick={()=>this.props.deleteProduct()}>Delete</button>
+        }
         return(
             <div className="modal fade" id="EditProductModal" tabIndex="-1" role="dialog" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered" role="document">
@@ -26,12 +40,7 @@ class EditProduct extends React.Component{
                                 className="btn btn-warning"
                                 data-dismiss="modal" 
                                 onClick={()=>this.props.editProduct()}>Edit</button>
-                            <button
-                                type="button"
-                                className="btn btn-danger"
-                                data-dismiss="modal" 
-                                onClick={()=>this.props.deleteProduct()}>Delete</button>
-                            {/* <Button button={button} onClick={this.props.postNewProduct}/> */}
+                            {ActionButton}
                             <CloseButton/>
                         </div>
                     </div>

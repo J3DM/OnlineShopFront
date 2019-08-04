@@ -91,6 +91,7 @@ class App extends React.Component{
     this.deleteProduct=this.deleteProduct.bind(this)
     this.editProduct=this.editProduct.bind(this)
     this.showAllSwitch=this.showAllSwitch.bind(this)
+    this.activateProduct=this.activateProduct.bind(this)
   }
 
   showAlert(className,title,msg){
@@ -377,7 +378,7 @@ class App extends React.Component{
   onChangeHandler(event){
     const {name, value, type, checked} = event.target
     console.log(name,value,checked)
-    type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value })
+    type === "checkbox" ? this.setState({ [name]: !checked }) : this.setState({ [name]: value })
     console.log(this.state.showAll)
   }
   confirmSale(value){
@@ -601,7 +602,7 @@ class App extends React.Component{
     ).then(
       (result)=>{
         this.listProducts()
-        this.showAlert("alert-warning","Product Deleted","the product "+this.state.productInfo._id+" was removed successfully")
+        this.showAlert("alert-warning","Product Deleted","the product "+this.state.productInfo._id+" was successfully "+result.data.product.state)
       }
     ).catch(
       (err)=>{
@@ -614,6 +615,20 @@ class App extends React.Component{
       return {showAll:!prevState.showAll}
     })
     this.listProducts()
+  }
+  activateProduct(){
+    axios.put(
+      url+":3001/v1/product/activate?id="+this.state.productInfo._id,
+    ).then(
+      (result)=>{
+        this.listProducts()
+        this.showAlert("alert-warning","Product Deleted","the product "+this.state.productInfo._id+" was successfully "+result.data.product.state)
+      }
+    ).catch(
+      (err)=>{
+        this.showAlert("alert-danger","Error deleting product","No product could be deleted with the id provided")
+      }
+    )
   }
 
   render(){
@@ -638,7 +653,10 @@ class App extends React.Component{
             infoHandler={this.infoHandler} 
             cartHandler={this.cartHandler}
             categories={this.state.categories}
-            filter={this.filterProducts}/>
+            filter={this.filterProducts}
+            onChange={this.onChangeHandler}
+            showAll={this.state.showAll}
+            user={this.state.user}/>
         </div>
        
         {/* Modals */}
@@ -679,7 +697,8 @@ class App extends React.Component{
         <EditProduct product={this.state.productInfo} 
           onChange={this.onChangeHandlerEditProduct}
           editProduct={this.editProduct}
-          deleteProduct={this.deleteProduct}/>
+          deleteProduct={this.deleteProduct}
+          activateProduct={this.activateProduct}/>
 
       </div>
     )  

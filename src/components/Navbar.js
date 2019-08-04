@@ -6,7 +6,6 @@ function Navbar(props){
     var UserData
     var RoleButton
     var ProductButton
-    var EditProduct=""
     if(props.user.role==="MANAGER"){
         ProductButton= <button 
                 type="button" 
@@ -14,7 +13,6 @@ function Navbar(props){
                 data-toggle="modal" 
                 data-target="#NewProductModal"
             >New Product</button>
-        EditProduct= ""
     }else{
         ProductButton= ""
     }
@@ -32,10 +30,6 @@ function Navbar(props){
                 data-toggle="modal" 
                 data-target="#NewProductModal"
             >New Product</button>
-        EditProduct= <div className="form in-line custom-control custom-switch">
-                        <label className="custom-control-label text-white" htmlFor="customSwitch1">Show deleted products</label>
-                        <input type="checkbox" className="custom-control-input" id="customSwitch1" checked={props.showAll} name="showAll" onChange={props.onChange}/>
-                    </div>
     }else{
         RoleButton=""
     }
@@ -107,7 +101,6 @@ function Navbar(props){
                     <br/>
                     <div className="col-12">
                         {RoleButton}
-                        {EditProduct}
                         {ProductButton}
                         {props.logoutButton}
                     </div>
@@ -130,8 +123,7 @@ function Navbar(props){
             <div className="col-7">
                  <h3 className="text-white">OnlineShop</h3>
              </div>
-             <div className="col-3">
-                
+             <div className="col-3">         
                 {Button}
              </div>
         </nav>

@@ -12,7 +12,7 @@ class EditProduct extends React.Component{
                 type="button"
                 className="btn btn-danger"
                 data-dismiss="modal" 
-                onClick={()=>this.props.deleteProduct()}>Enable</button>                        
+                onClick={()=>this.props.activateProduct()}>Enable</button>                        
         }else{
             ActionButton=<button
                 type="button"

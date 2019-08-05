@@ -378,7 +378,7 @@ class App extends React.Component{
   onChangeHandler(event){
     const {name, value, type, checked} = event.target
     console.log(name,value,checked)
-    type === "checkbox" ? this.setState({ [name]: !checked }) : this.setState({ [name]: value })
+    type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value })
     console.log(this.state.showAll)
   }
   confirmSale(value){
@@ -508,7 +508,7 @@ class App extends React.Component{
     if(value["category"]){
       //console.log("Searching by category: ",value["category"])
       axios.get(
-        url+":3001/v1/product/category?cat="+value["category"]
+        url+":3001/v1/product/category?cat="+value["category"]+"&showAll="+this.state.showAll
       )
       .then(
         (result)=>{
@@ -522,7 +522,7 @@ class App extends React.Component{
     }else{
       //console.log("Searching by name: ",value)
       axios.get(
-        url+":3001/v1/product/name?name="+value
+        url+":3001/v1/product/name?name="+value+"&showAll="+this.state.showAll
       )
       .then(
         (result)=>{

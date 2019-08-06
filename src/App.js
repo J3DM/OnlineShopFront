@@ -19,7 +19,7 @@ import RoleModal from "./components/Modals/Roles/RoleModal"
 import Alert from "./components/Modals/Alert/AlertBox"
 import EditProduct from "./components/Modals/EditProduct/EditProductModal"
 
-const url="http://localhost"
+const url="http://192.168.0.18"
 
 const NoUser={
   "_id": "",
@@ -654,6 +654,7 @@ class App extends React.Component{
             cartHandler={this.cartHandler}
             categories={this.state.categories}
             filter={this.filterProducts}
+            list={this.listProducts}
             onChange={this.onChangeHandler}
             showAll={this.state.showAll}
             user={this.state.user}/>

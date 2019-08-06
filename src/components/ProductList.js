@@ -73,7 +73,7 @@ class ProductList extends React.Component{
                                     <div className="form-inline my-2 my-lg-0">
                                         <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="name" onChange={this.onChangeHandler}/>
                                         <button className="btn btn-outline-success my-2 mr-sm-2" onClick={()=>this.props.filter("name",this.state.name)}>Search</button>
-                                        <button className="btn btn-outline-warning my-2 my-sm-0" onClick={()=>this.props.filter("name","")}>Clear</button>
+                                        <button className="btn btn-outline-warning my-2 my-sm-0" onClick={()=>this.props.list()}>Clear</button>
                                     </div>
                                 </div>
                             </div>

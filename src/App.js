@@ -60,7 +60,13 @@ class App extends React.Component{
       newProduct:NoProduct,
       categories:[],
       alerts:[],
-      showAll:false
+      showAll:false,
+      page:0,
+      itemsPage:6,
+      pages:0,
+      lastProductQuery:"",
+      category:"",
+      productName:""
     }
     
     this.submitLogin=this.submitLogin.bind(this)
@@ -92,6 +98,7 @@ class App extends React.Component{
     this.editProduct=this.editProduct.bind(this)
     this.showAllSwitch=this.showAllSwitch.bind(this)
     this.activateProduct=this.activateProduct.bind(this)
+    this.giveProductsPage=this.giveProductsPage.bind(this)
   }
 
   showAlert(className,title,msg){
@@ -152,18 +159,16 @@ class App extends React.Component{
   }
 
   listProducts() {
+    //console.log("Listando Productos pagina:",this.state.page)
     if(this.state.showAll){
       axios.get(
-        url+":3001/v1/product/listAll",
-        {}
+        url+":3001/v1/product/listAll?page="+this.state.page+"&itemsPage="+this.state.itemsPage
       )
       .then(
         (resultArray)=>{
-          this.setState({products:resultArray.data})
-          //console.log(this.state.products.products.length)
-          var categories=new Set()
-          this.state.products.products.map(product=>categories.add(product.category))
-          this.setState({categories:categories})
+          console.log(resultArray)
+          this.setState({products:resultArray.data.products,pages:resultArray.data.pages,lastProductQuery:"list"})
+          this.setState({categories:resultArray.data.categories})
         }
       )
       .catch(
@@ -171,16 +176,18 @@ class App extends React.Component{
       )
     }else{
       axios.get(
-          url+":3001/v1/product/list",
+          url+":3001/v1/product/list?page="+this.state.page+"&itemsPage="+this.state.itemsPage,
           {}
         )
         .then(
           (resultArray)=>{
-            this.setState({products:resultArray.data})
-            //console.log(this.state.products.products.length)
-            var categories=new Set()
-            this.state.products.products.map(product=>categories.add(product.category))
-            this.setState({categories:categories})
+            console.log(resultArray.data)
+            this.setState({products:resultArray.data.products,
+              pages:resultArray.data.pages,
+              lastProductQuery:"list",
+              categories:resultArray.data.categories
+            })
+            // console.log(this.state)
           }
         )
         .catch(
@@ -473,29 +480,7 @@ class App extends React.Component{
     )
     .then(
       (result)=>{
-        axios.get(
-          url+":3001/v1/product/list")
-        .then(
-          (resultArray)=>{
-            this.setState(prevState=>{
-              var alertArray=prevState.alerts
-              alertArray.push(
-                {
-                  class:"alert-success",
-                  title:"New Product "+this.state.newProduct.name,
-                  msg:"New product added",
-                  show:true
-                }
-              )
-              return {
-                products:resultArray.data,
-                alerts:alertArray,
-                newProduct:NoProduct
-              }
-            })
-            //this.setState({products:resultArray.data})
-          }
-        )
+        this.listProducts()
       }
     )
     .catch(
@@ -505,15 +490,16 @@ class App extends React.Component{
     )
   }
   filterProducts(type,value){
-    if(value["category"]){
+    console.log(value)
+    if(type==="category"){
       //console.log("Searching by category: ",value["category"])
       axios.get(
-        url+":3001/v1/product/category?cat="+value["category"]+"&showAll="+this.state.showAll
+        url+":3001/v1/product/category?cat="+this.state.category+"&showAll="+this.state.showAll+"&page="+this.state.page+"&itemsPage="+this.state.itemsPage
       )
       .then(
         (result)=>{
         //  console.log(result)
-          this.setState({products:result.data})
+          this.setState({products:result.data.products,pages:result.data.pages,lastProductQuery:"filterCategory",category:value["category"]})
         }
       )
       .catch(
@@ -522,18 +508,19 @@ class App extends React.Component{
     }else{
       //console.log("Searching by name: ",value)
       axios.get(
-        url+":3001/v1/product/name?name="+value+"&showAll="+this.state.showAll
+        url+":3001/v1/product/name?name="+value+"&showAll="+this.state.showAll+"&page="+this.state.page+"&itemsPage="+this.state.itemsPage
       )
       .then(
         (result)=>{
         //  console.log(result)
-          this.setState({products:result.data})
+          this.setState({products:result.data.products,pages:result.data.pages,lastProductQuery:"filterName",productName:value})
         }
       )
       .catch(
         (err)=>console.log(err)
       )
     }
+    this.forceUpdate()
   }
   changeUserRole(email,role){
     //console.log(email,role)
@@ -630,6 +617,19 @@ class App extends React.Component{
       }
     )
   }
+  giveProductsPage(newPage){
+    console.log("Give Products page",newPage,"for the query",this.state.lastProductQuery)
+    this.setState({page:newPage})
+    console.log(this.state)
+    this.forceUpdate()
+    if(this.state.lastProductQuery==="list"){
+      this.listProducts(this.state.category)
+    }else if(this.state.lastProductQuery==="filterName"){
+      this.filterProducts("name",this.state.productName)
+    }else{
+      this.filterProducts("category",{category:this.state.category})
+    }
+  }
 
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
@@ -657,7 +657,10 @@ class App extends React.Component{
             list={this.listProducts}
             onChange={this.onChangeHandler}
             showAll={this.state.showAll}
-            user={this.state.user}/>
+            user={this.state.user}
+            giveProductsPage={this.giveProductsPage}
+            pages={this.state.pages}
+            productName={this.state.productName}/>
         </div>
        
         {/* Modals */}

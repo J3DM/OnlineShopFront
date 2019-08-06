@@ -1,6 +1,7 @@
 import React from"react"
 
 import Product from "./Product";
+import Pagination from "./ProductList/Pagination"
 
 class ProductList extends React.Component{
     constructor(){
@@ -30,8 +31,8 @@ class ProductList extends React.Component{
             </div></div>
         }
         var productList
-        if(this.props.products.products){
-            productList=this.props.products.products.map(product=>{
+        if(this.props.products[0]){
+            productList=this.props.products.map(product=>{
                 return <Product 
                     key={product._id} 
                     user={this.props.user} 
@@ -41,6 +42,10 @@ class ProductList extends React.Component{
             })
         }else{
             productList=<h1>No products found</h1>
+        }
+        var PageSelector=""
+        if(this.props.pages>1){
+            PageSelector=<Pagination pages={this.props.pages} giveProductsPage={this.props.giveProductsPage}/>
         }
         var categoryList
         categoryList=Array.from(this.props.categories).map(category=><button key={category} className="dropdown-item h6" href="/" onClick={()=>this.props.filter("category",{category})}>{category}</button>)
@@ -71,8 +76,8 @@ class ProductList extends React.Component{
                                 </div>
                                 <div className="col-6">
                                     <div className="form-inline my-2 my-lg-0">
-                                        <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="name" onChange={this.onChangeHandler}/>
-                                        <button className="btn btn-outline-success my-2 mr-sm-2" onClick={()=>this.props.filter("name",this.state.name)}>Search</button>
+                                        <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name={this.props.productName} onChange={this.props.onChange}/>
+                                        <button className="btn btn-outline-success my-2 mr-sm-2" onClick={()=>this.props.filter("name",this.props.productName)}>Search</button>
                                         <button className="btn btn-outline-warning my-2 my-sm-0" onClick={()=>this.props.list()}>Clear</button>
                                     </div>
                                 </div>
@@ -84,7 +89,13 @@ class ProductList extends React.Component{
                     <div className="row">
                         {productList}
                     </div>
+                    <div>
+                        {
+                        PageSelector
+                        }
+                    </div>
                 </div>
+                
             </div>
         )
     }

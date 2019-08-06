@@ -20,13 +20,13 @@ class ProductList extends React.Component{
         var showAllProducts=""
         if(this.props.user.role==="ADMIN" ||this.props.user.role==="MANAGER" ){
             showAllProducts= <div className="col-3"><div className="form in-line custom-control custom-switch">
-                <label className="custom-control-label" htmlFor="customSwitch1">Show deleted products</label>
                 <input 
                     type="checkbox" 
                     className="custom-control-input" 
                     id="customSwitch1" 
-                    checked={this.props.showAll} name="showAll" 
+                    checked={this.props.showAll} name="showAll"
                     onChange={this.props.onChange}/>
+                <label className="custom-control-label" htmlFor="customSwitch1">Show deleted products</label>
             </div></div>
         }
         var productList

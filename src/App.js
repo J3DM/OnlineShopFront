@@ -19,7 +19,7 @@ import RoleModal from "./components/Modals/Roles/RoleModal"
 import Alert from "./components/Modals/Alert/AlertBox"
 import EditProduct from "./components/Modals/EditProduct/EditProductModal"
 
-const url="http://192.168.0.18"
+const url="https://j3dm-shop-back.herokuapp.com"
 
 const NoUser={
   "_id": "",
@@ -143,7 +143,7 @@ class App extends React.Component{
       name:productName
     }
     axios.put(
-      url+":3001/v1/user/product",
+      url+"/v1/user/product",
       data
     ).then(
       (result)=>{
@@ -162,7 +162,7 @@ class App extends React.Component{
     //console.log("Listando Productos pagina:",this.state.page)
     if(this.state.showAll){
       axios.get(
-        url+":3001/v1/product/listAll?page="+this.state.page+"&itemsPage="+this.state.itemsPage
+        url+"/v1/product/listAll?page="+this.state.page+"&itemsPage="+this.state.itemsPage
       )
       .then(
         (resultArray)=>{
@@ -176,7 +176,7 @@ class App extends React.Component{
       )
     }else{
       axios.get(
-          url+":3001/v1/product/list?page="+this.state.page+"&itemsPage="+this.state.itemsPage,
+          url+"/v1/product/list?page="+this.state.page+"&itemsPage="+this.state.itemsPage,
           {}
         )
         .then(
@@ -203,7 +203,7 @@ class App extends React.Component{
         password:password
     }
     axios.post(
-        url+":3001/v1/user/login",
+        url+"/v1/user/login",
         data  
     )
     .then(
@@ -276,7 +276,7 @@ class App extends React.Component{
   editUser(){
     var data=this.state.user
     axios.put(
-        url+":3001/v1/user",
+        url+"/v1/user",
         data  
     )
     .then(
@@ -291,7 +291,7 @@ class App extends React.Component{
               this.showAlert("alert-success","Update User data","was successfull")
             }else{
               console.log("Error Updating the user")
-              axios.get(url+":3001/v1/user?_id="+this.state.user._id)
+              axios.get(url+"/v1/user?_id="+this.state.user._id)
               .then((result)=>{
                 this.setState(
                   {
@@ -315,7 +315,7 @@ class App extends React.Component{
       _id:this.state.user._id
     }
     axios.put(
-      url+":3001/v1/user/product",
+      url+"/v1/user/product",
       data
     ).then(
       (result)=>{
@@ -336,7 +336,7 @@ class App extends React.Component{
       address:this.state.address
     }
     axios.post(
-      url+":3001/v1/sale?_id="+this.state.user._id,
+      url+"/v1/sale?_id="+this.state.user._id,
       data
     ).then(
       (result)=>{
@@ -395,7 +395,7 @@ class App extends React.Component{
       state:value
     }
     axios.put(
-      url+":3001/v1/sale",
+      url+"/v1/sale",
       data
     ).then(
       (result)=>{
@@ -423,7 +423,7 @@ class App extends React.Component{
         "role": "CUSTOMER"      
     }
     axios.post(
-      url+":3001/v1/user",
+      url+"/v1/user",
       data  
     )
     .then(
@@ -448,7 +448,7 @@ class App extends React.Component{
   getPendingSales(){
     //console.log("getting pending sales")
     axios.get(
-      url+":3001/v1/sale/user?user="+this.state.user._id
+      url+"/v1/sale/user?user="+this.state.user._id
       //TODO ADD SOMETHING
     )
     .then(
@@ -475,11 +475,12 @@ class App extends React.Component{
       image:this.state.newProduct.image
     }
     axios.post(
-      url+":3001/v1/product",
+      url+"/v1/product",
       data
     )
     .then(
       (result)=>{
+        this.setState({newProduct:NoProduct})
         this.listProducts()
       }
     )
@@ -494,7 +495,7 @@ class App extends React.Component{
     if(type==="category"){
       //console.log("Searching by category: ",value["category"])
       axios.get(
-        url+":3001/v1/product/category?cat="+this.state.category+"&showAll="+this.state.showAll+"&page="+this.state.page+"&itemsPage="+this.state.itemsPage
+        url+"/v1/product/category?cat="+this.state.category+"&showAll="+this.state.showAll+"&page="+this.state.page+"&itemsPage="+this.state.itemsPage
       )
       .then(
         (result)=>{
@@ -508,7 +509,7 @@ class App extends React.Component{
     }else{
       //console.log("Searching by name: ",value)
       axios.get(
-        url+":3001/v1/product/name?name="+value+"&showAll="+this.state.showAll+"&page="+this.state.page+"&itemsPage="+this.state.itemsPage
+        url+"/v1/product/name?name="+value+"&showAll="+this.state.showAll+"&page="+this.state.page+"&itemsPage="+this.state.itemsPage
       )
       .then(
         (result)=>{
@@ -529,7 +530,7 @@ class App extends React.Component{
       role:role
     }
     axios.put(
-      url+":3001/v1/user/role",
+      url+"/v1/user/role",
       data
     ).then(
       (result)=>{
@@ -569,7 +570,7 @@ class App extends React.Component{
       image:this.state.productInfo.image
     }
     axios.put(
-      url+":3001/v1/product",
+      url+"/v1/product",
       data
     ).then(
       (result)=>{
@@ -585,7 +586,7 @@ class App extends React.Component{
   deleteProduct(){
     // console.log("Delete product")
     axios.delete(
-      url+":3001/v1/product?id="+this.state.productInfo._id,
+      url+"/v1/product?id="+this.state.productInfo._id,
     ).then(
       (result)=>{
         this.listProducts()
@@ -605,7 +606,7 @@ class App extends React.Component{
   }
   activateProduct(){
     axios.put(
-      url+":3001/v1/product/activate?id="+this.state.productInfo._id,
+      url+"/v1/product/activate?id="+this.state.productInfo._id,
     ).then(
       (result)=>{
         this.listProducts()
@@ -618,9 +619,9 @@ class App extends React.Component{
     )
   }
   giveProductsPage(newPage){
-    console.log("Give Products page",newPage,"for the query",this.state.lastProductQuery)
+    //console.log("Give Products page",newPage,"for the query",this.state.lastProductQuery)
     this.setState({page:newPage})
-    console.log(this.state)
+    //console.log(this.state)
     this.forceUpdate()
     if(this.state.lastProductQuery==="list"){
       this.listProducts(this.state.category)

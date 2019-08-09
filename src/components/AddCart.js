@@ -35,9 +35,9 @@ class AddCart extends React.Component{
     }else{
         CartButton=<button 
         type="button"
-        className="btn btn-primary" 
+        className="btn btn-warning" 
         aria-label="Add to Cart"
-        disabled>Add to Cart
+        disabled>Login to Shop
         </button>
     }
     return(

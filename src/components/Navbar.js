@@ -20,13 +20,13 @@ function Navbar(props){
         RoleButton=
             <button 
                 type="button" 
-                className="btn btn-success mr-sm-2" 
+                className="btn btn-success m-2 mr-2" 
                 data-toggle="modal" 
                 data-target="#RoleModal"
             >Give Roles</button>
         ProductButton= <button 
                 type="button" 
-                className="btn btn-info mr-sm-2" 
+                className="btn btn-info m-2 mr-2" 
                 data-toggle="modal" 
                 data-target="#NewProductModal"
             >New Product</button>
@@ -114,13 +114,8 @@ function Navbar(props){
         <div className="collapse" id="navbarToggleExternalContent">
             {UserData}
         </div>
-        <nav className="navbar navbar-dark bg-dark">
-            <div className="col-2">
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-            </div>
-            <div className="col-7">
+        <nav className="navbar navbar-dark bg-dark"  type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" >
+            <div className="col-9">
                  <h3 className="text-white">OnlineShop</h3>
              </div>
              <div className="col-3">         

@@ -634,7 +634,7 @@ class App extends React.Component{
 
   render(){
     var LoginModalButton=<button type="button" className="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Login</button>
-    var LogoutButton=<button type="button" className="btn btn-warning" onClick={()=>this.logout()}>Logout</button>
+    var LogoutButton=<button type="button" className="btn btn-warning m-2" onClick={()=>this.logout()}>Logout</button>
 
     return (
       <div className="App">

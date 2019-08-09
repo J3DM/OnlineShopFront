@@ -384,9 +384,9 @@ class App extends React.Component{
   }
   onChangeHandler(event){
     const {name, value, type, checked} = event.target
-    console.log(name,value,checked)
+    //console.log(name,value,checked)
     type === "checkbox" ? this.setState({ [name]: checked }) : this.setState({ [name]: value })
-    console.log(this.state.showAll)
+    //console.log(this.state.showAll)
   }
   confirmSale(value){
     // console.log("Request:",this.state.sale._id,value)

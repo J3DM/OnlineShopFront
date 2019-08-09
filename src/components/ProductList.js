@@ -67,7 +67,7 @@ class ProductList extends React.Component{
                     <div id="collapseOne" className="collapse " aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div className="card-body">
                             <div className="row">
-                                <div className="col-12 col-md-3 col-lg-3 col-xl-3">
+                                <div className="col-12 col-md-2 col-lg-2 col-xl-2">
                                     {showAllProducts}
                                 </div>
                                 <div className="col-12 col-md-3 col-lg-3 col-xl-3 mt-2">
@@ -79,10 +79,10 @@ class ProductList extends React.Component{
                                 <div className="col-12 col-md-3 col-lg-3 col-xl-3 mt-2">
                                     <input className="form-control" type="search" placeholder="Search" aria-label="Search" name={this.props.productName} onChange={this.props.onChange}/>
                                 </div>
-                                <div className="col-6 col-md-3 col-lg-3 col-xl-3 mt-2">
+                                <div className="col-6 col-md-2 col-lg-2 col-xl-2 mt-2">
                                     <button className="btn btn-outline-success" onClick={()=>this.props.filter("name",this.props.productName)}>Search</button>
                                 </div>
-                                <div className="col-6 col-md-3 col-lg-3 col-xl-3 mt-2">
+                                <div className="col-6 col-md-2 col-lg-2 col-xl-2 mt-2">
                                     <button className="btn btn-outline-warning" onClick={()=>this.props.list()}>Clear</button>
                                 </div>
 

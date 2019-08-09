@@ -181,7 +181,7 @@ class App extends React.Component{
         )
         .then(
           (resultArray)=>{
-            console.log(resultArray.data)
+            //console.log(resultArray.data)
             this.setState({products:resultArray.data.products,
               pages:resultArray.data.pages,
               lastProductQuery:"list",

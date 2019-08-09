@@ -491,7 +491,7 @@ class App extends React.Component{
     )
   }
   filterProducts(type,value){
-    console.log(value)
+    //console.log(value)
     if(type==="category"){
       //console.log("Searching by category: ",value["category"])
       axios.get(

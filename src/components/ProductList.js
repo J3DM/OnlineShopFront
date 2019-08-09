@@ -20,7 +20,7 @@ class ProductList extends React.Component{
         //console.log(this.props)
         var showAllProducts=""
         if(this.props.user.role==="ADMIN" ||this.props.user.role==="MANAGER" ){
-            showAllProducts= <div className="col-3"><div className="form in-line custom-control custom-switch">
+            showAllProducts=<div className="form in-line custom-control custom-switch">
                 <input 
                     type="checkbox" 
                     className="custom-control-input" 
@@ -28,7 +28,7 @@ class ProductList extends React.Component{
                     checked={this.props.showAll} name="showAll"
                     onChange={this.props.onChange}/>
                 <label className="custom-control-label" htmlFor="customSwitch1">Show removed</label>
-            </div></div>
+            </div>
         }
         var productList
         if(this.props.products[0]){

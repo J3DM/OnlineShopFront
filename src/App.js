@@ -493,14 +493,15 @@ class App extends React.Component{
   filterProducts(type,value){
     //console.log(value)
     if(type==="category"){
-      //console.log("Searching by category: ",value["category"])
+      //console.log("Searching by category:",)
+      this.setState({category:value["category"]})
       axios.get(
-        url+"/v1/product/category?cat="+this.state.category+"&showAll="+this.state.showAll+"&page="+this.state.page+"&itemsPage="+this.state.itemsPage
+        url+"/v1/product/category?cat="+value["category"]+"&showAll="+this.state.showAll+"&page="+this.state.page+"&itemsPage="+this.state.itemsPage
       )
       .then(
         (result)=>{
         //  console.log(result)
-          this.setState({products:result.data.products,pages:result.data.pages,lastProductQuery:"filterCategory",category:value["category"]})
+          this.setState({products:result.data.products,pages:result.data.pages,lastProductQuery:"filterCategory"})
         }
       )
       .catch(
@@ -704,7 +705,6 @@ class App extends React.Component{
           editProduct={this.editProduct}
           deleteProduct={this.deleteProduct}
           activateProduct={this.activateProduct}/>
-
       </div>
     )  
   }
